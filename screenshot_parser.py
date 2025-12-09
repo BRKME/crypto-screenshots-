@@ -464,12 +464,29 @@ def send_to_twitter(title, hashtags, image_path):
 
 
 async def accept_cookies(page):
-    """Принимает cookies если баннер появился"""
+    """Принимает cookies если баннер появился - СПЕЦИАЛЬНО ДЛЯ COINMARKETCAP"""
     try:
+        # ПРИОРИТЕТ: Специфичный селектор CoinMarketCap (из твоего кода!)
+        cmc_selectors = [
+            'button:has-text("Accept Cookies and Continue")',
+            'button:has-text("Accept All Cookies")',
+        ]
+        
+        for selector in cmc_selectors:
+            try:
+                button = await page.query_selector(selector)
+                if button:
+                    await button.click()
+                    logger.info("✓ CoinMarketCap cookie-баннер принят")
+                    await asyncio.sleep(2)  # Важная задержка!
+                    return True
+            except:
+                continue
+        
+        # Fallback: Общие селекторы
         cookie_buttons = [
             'button:has-text("Accept")',
             'button:has-text("Accept All")',
-            'button:has-text("Accept Cookies")',
             'button:has-text("Agree")',
             'button:has-text("OK")',
             'text="Accept"',
@@ -490,7 +507,7 @@ async def accept_cookies(page):
             except:
                 continue
 
-        # Скрываем cookie баннеры через CSS - УСИЛЕННАЯ ВЕРСИЯ
+        # Скрываем через CSS если ничего не сработало
         try:
             await page.add_style_tag(content="""
                 [class*="cookie"],
@@ -501,55 +518,12 @@ async def accept_cookies(page):
                 div[class*="fixed"][class*="bottom"],
                 [class*="cookie-banner"],
                 [role="dialog"],
-                [class*="modal"],
-                div[style*="z-index"],
-                div:has-text("cookies"),
-                div:has-text("By using"),
-                footer[style*="fixed"],
-                [class*="banner"] {
+                [class*="modal"] {
                     display: none !important;
                     visibility: hidden !important;
-                    opacity: 0 !important;
-                    height: 0 !important;
-                    overflow: hidden !important;
                 }
             """)
             logger.info("✓ Cookie-баннеры скрыты через CSS")
-            
-            # Дополнительно удаляем через JavaScript
-            await page.evaluate("""
-                () => {
-                    // Ищем все элементы с текстом про cookies
-                    const walker = document.createTreeWalker(
-                        document.body,
-                        NodeFilter.SHOW_TEXT,
-                        null,
-                        false
-                    );
-                    
-                    const nodesToRemove = [];
-                    while(walker.nextNode()) {
-                        const node = walker.currentNode;
-                        if (node.textContent.toLowerCase().includes('cookie') ||
-                            node.textContent.includes('By using')) {
-                            let parent = node.parentElement;
-                            while (parent && parent !== document.body) {
-                                if (parent.style.position === 'fixed' || 
-                                    parent.className.includes('modal') ||
-                                    parent.className.includes('banner')) {
-                                    nodesToRemove.push(parent);
-                                    break;
-                                }
-                                parent = parent.parentElement;
-                            }
-                        }
-                    }
-                    
-                    nodesToRemove.forEach(node => node.remove());
-                    console.log('Removed cookie banners:', nodesToRemove.length);
-                }
-            """)
-            
         except:
             pass
 
@@ -570,7 +544,15 @@ async def take_screenshot(page, source_config, source_key):
         await page.goto(url, wait_until='domcontentloaded', timeout=SCREENSHOT_SETTINGS['wait_timeout'])
         logger.info("✓ Страница загружена")
         
-        # FIX BUG #6: Проверка на Cloudflare/Captcha
+        # ВАЖНО: Принимаем cookies СРАЗУ после загрузки (из твоего кода!)
+        logger.info("🍪 Обработка cookies...")
+        await accept_cookies(page)
+        
+        # Дополнительное ожидание как в рабочем коде (5 секунд!)
+        logger.info("⏳ Ожидание загрузки контента (5 секунд)...")
+        await asyncio.sleep(5)
+        
+        # FIX BUG #6: Проверка на Cloudflare/Captcha (БОЛЕЕ ТОЧНАЯ)
         page_title = await page.title()
         page_content = await page.content()
         
@@ -583,12 +565,16 @@ async def take_screenshot(page, source_config, source_key):
                 logger.error("✗ Cloudflare challenge не пройден!")
                 return None
         
-        if "captcha" in page_content.lower():
+        # УЛУЧШЕНО: Более точная проверка CAPTCHA (не срабатывает на обычное слово "captcha")
+        if any(indicator in page_content.lower() for indicator in [
+            'captcha-challenge',
+            'recaptcha',
+            'hcaptcha', 
+            'challenge-form',
+            'data-sitekey'
+        ]):
             logger.error("✗ CAPTCHA обнаружен на странице!")
             return None
-        
-        # Принимаем cookies
-        await accept_cookies(page)
         
         # Ждем загрузки контента
         wait_for = source_config.get('wait_for')
@@ -756,7 +742,7 @@ async def main_parser():
             )
 
             context = await browser.new_context(
-                user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
                 viewport={
                     'width': SCREENSHOT_SETTINGS['viewport_width'], 
                     'height': SCREENSHOT_SETTINGS['viewport_height']
