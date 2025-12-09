@@ -1,0 +1,98 @@
+name: Screenshot Parser - Every 3 Hours
+
+on:
+  schedule:
+    # Запуск каждые 3 часа: 00:05, 03:05, 06:05, 09:05, 12:05, 15:05, 18:05, 21:05 UTC
+    - cron: '5 0,3,6,9,12,15,18,21 * * *'
+  
+  workflow_dispatch:  # Позволяет запускать вручную
+
+permissions:
+  contents: write
+
+jobs:
+  screenshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        persist-credentials: true
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    
+    - name: Install Python dependencies
+      run: |
+        pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Install Playwright browsers
+      run: |
+        playwright install chromium
+        playwright install-deps chromium
+    
+    - name: Check required files
+      run: |
+        echo "🔍 Checking required files..."
+        ls -la screenshot_parser.py sources_config.py
+        echo "✅ All files present"
+    
+    - name: Run screenshot parser
+      env:
+        MAX_RETRIES: 2
+        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        TWITTER_API_KEY: ${{ secrets.TWITTER_API_KEY }}
+        TWITTER_API_SECRET: ${{ secrets.TWITTER_API_SECRET }}
+        TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+        TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
+        TWITTER_BEARER_TOKEN: ${{ secrets.TWITTER_BEARER_TOKEN }}
+        TWITTER_ENABLED: ${{ vars.TWITTER_ENABLED || 'true' }}
+      run: |
+        python screenshot_parser.py
+    
+    - name: Commit publication history
+      if: always()
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        
+        # Добавляем только существующие файлы
+        if [ -f "publication_history.json" ]; then
+          git add publication_history.json
+        fi
+        
+        # Проверяем есть ли изменения
+        if git diff --staged --quiet; then
+          echo "Нет изменений для commit"
+        else
+          git commit -m "📊 Update publication history [skip ci]"
+          git push
+        fi
+      continue-on-error: true
+    
+    - name: Clean up old screenshots
+      if: always()
+      run: |
+        # Удаляем скриншоты старше 1 дня
+        find screenshots -type f -name "*.png" -mtime +1 -delete 2>/dev/null || true
+        find screenshots -type f -name "*.jpg" -mtime +1 -delete 2>/dev/null || true
+        echo "✅ Old screenshots cleaned"
+      continue-on-error: true
+    
+    - name: Upload logs on failure
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: screenshot-logs-${{ github.run_number }}
+        path: |
+          screenshot_parser.log
+          *.json
+        retention-days: 7
+        if-no-files-found: ignore
