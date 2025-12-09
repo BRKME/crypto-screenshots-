@@ -1,12 +1,12 @@
 {
   "last_published": {
-    "token_unlocks": "2025-12-09T21:54:43.597874+00:00"
+    "token_unlocks": "2025-12-09T22:12:39.207001+00:00"
   },
   "last_publication": {
     "source": "token_unlocks",
     "name": "Token Unlocks",
-    "published_at": "2025-12-09T21:54:43.597892+00:00",
-    "hour_utc": 21,
+    "published_at": "2025-12-09T22:12:39.207018+00:00",
+    "hour_utc": 22,
     "telegram": true,
     "twitter": false
   }
