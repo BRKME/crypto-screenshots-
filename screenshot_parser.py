@@ -490,7 +490,7 @@ async def accept_cookies(page):
             except:
                 continue
 
-        # Скрываем cookie баннеры через CSS если кнопка не найдена
+        # Скрываем cookie баннеры через CSS - УСИЛЕННАЯ ВЕРСИЯ
         try:
             await page.add_style_tag(content="""
                 [class*="cookie"],
@@ -500,12 +500,56 @@ async def accept_cookies(page):
                 div[style*="position: fixed"][style*="bottom"],
                 div[class*="fixed"][class*="bottom"],
                 [class*="cookie-banner"],
-                [role="dialog"][style*="bottom"] {
+                [role="dialog"],
+                [class*="modal"],
+                div[style*="z-index"],
+                div:has-text("cookies"),
+                div:has-text("By using"),
+                footer[style*="fixed"],
+                [class*="banner"] {
                     display: none !important;
                     visibility: hidden !important;
+                    opacity: 0 !important;
+                    height: 0 !important;
+                    overflow: hidden !important;
                 }
             """)
             logger.info("✓ Cookie-баннеры скрыты через CSS")
+            
+            # Дополнительно удаляем через JavaScript
+            await page.evaluate("""
+                () => {
+                    // Ищем все элементы с текстом про cookies
+                    const walker = document.createTreeWalker(
+                        document.body,
+                        NodeFilter.SHOW_TEXT,
+                        null,
+                        false
+                    );
+                    
+                    const nodesToRemove = [];
+                    while(walker.nextNode()) {
+                        const node = walker.currentNode;
+                        if (node.textContent.toLowerCase().includes('cookie') ||
+                            node.textContent.includes('By using')) {
+                            let parent = node.parentElement;
+                            while (parent && parent !== document.body) {
+                                if (parent.style.position === 'fixed' || 
+                                    parent.className.includes('modal') ||
+                                    parent.className.includes('banner')) {
+                                    nodesToRemove.push(parent);
+                                    break;
+                                }
+                                parent = parent.parentElement;
+                            }
+                        }
+                    }
+                    
+                    nodesToRemove.forEach(node => node.remove());
+                    console.log('Removed cookie banners:', nodesToRemove.length);
+                }
+            """)
+            
         except:
             pass
 
@@ -557,6 +601,42 @@ async def take_screenshot(page, source_config, source_key):
         
         # Дополнительное ожидание
         await asyncio.sleep(SCREENSHOT_SETTINGS['wait_after_load'])
+        
+        # ✅ FIX: Для token_unlocks оставляем только первые 10 токенов
+        if source_key == "token_unlocks":
+            try:
+                await page.evaluate("""
+                    () => {
+                        // Удаляем cookie баннеры
+                        document.querySelectorAll('[class*="cookie"], [class*="consent"], [role="dialog"]').forEach(el => {
+                            if (el.textContent.toLowerCase().includes('cookie') || 
+                                el.textContent.includes('By using')) {
+                                el.remove();
+                            }
+                        });
+                        
+                        // Ограничиваем высоту main контейнера
+                        const main = document.querySelector('main');
+                        if (main) {
+                            main.style.maxHeight = '900px';
+                            main.style.overflow = 'hidden';
+                        }
+                        
+                        // Скрываем лишние строки в таблице
+                        const table = document.querySelector('table tbody');
+                        if (table) {
+                            const rows = table.querySelectorAll('tr');
+                            for (let i = 12; i < rows.length; i++) {
+                                rows[i].style.display = 'none';
+                            }
+                            console.log('✓ Скрыто строк:', rows.length - 12);
+                        }
+                    }
+                """)
+                logger.info("✓ Token unlocks: применены ограничения и удалены баннеры")
+                await asyncio.sleep(2)
+            except Exception as e:
+                logger.warning(f"⚠️ Не удалось обработать token_unlocks: {e}")
         
         # Делаем скриншот
         timestamp = datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')
