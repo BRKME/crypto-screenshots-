@@ -2,17 +2,15 @@ name: Screenshot Parser - Every 3 Hours
 
 on:
   schedule:
-    # Запуск каждые 3 часа: 00:05, 03:05, 06:05, 09:05, 12:05, 15:05, 18:05, 21:05 UTC
     - cron: '5 0,3,6,9,12,15,18,21 * * *'
-  
-  workflow_dispatch:  # Позволяет запускать вручную
+  workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
   screenshot:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 15
     
     steps:
@@ -34,26 +32,14 @@ jobs:
     
     - name: Install Playwright browsers
       run: |
-        playwright install chromium
-        playwright install-deps chromium
-    
-    - name: Check required files
-      run: |
-        echo "🔍 Checking required files..."
-        ls -la screenshot_parser.py sources_config.py
-        echo "✅ All files present"
+        playwright install chromium --with-deps
     
     - name: Run screenshot parser
       env:
         MAX_RETRIES: 2
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        TWITTER_API_KEY: ${{ secrets.TWITTER_API_KEY }}
-        TWITTER_API_SECRET: ${{ secrets.TWITTER_API_SECRET }}
-        TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
-        TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
-        TWITTER_BEARER_TOKEN: ${{ secrets.TWITTER_BEARER_TOKEN }}
-        TWITTER_ENABLED: ${{ vars.TWITTER_ENABLED || 'false' }}
+        TWITTER_ENABLED: false
       run: |
         python screenshot_parser.py
     
@@ -68,7 +54,7 @@ jobs:
         fi
         
         if git diff --staged --quiet; then
-          echo "Нет изменений для commit"
+          echo "Нет изменений"
         else
           git commit -m "📊 Update publication history [skip ci]"
           git push
@@ -80,7 +66,7 @@ jobs:
       run: |
         find screenshots -type f -name "*.png" -mtime +1 -delete 2>/dev/null || true
         find screenshots -type f -name "*.jpg" -mtime +1 -delete 2>/dev/null || true
-        echo "✅ Old screenshots cleaned"
+        echo "✅ Cleanup done"
       continue-on-error: true
     
     - name: Upload logs on failure
