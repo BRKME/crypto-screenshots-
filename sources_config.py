@@ -1,6 +1,6 @@
 """
 Конфигурация источников для скриншотов
-Version: 1.1 - Fixed token_unlocks selector
+Version: 1.2 - Fixed token_unlocks to show only top 10 tokens
 """
 
 # Конфигурация источников для скриншотов
@@ -85,7 +85,7 @@ SCREENSHOT_SOURCES = {
     "token_unlocks": {
         "name": "Token Unlocks",
         "url": "https://dropstab.com/vesting",
-        "selector": "main",  # ✅ ИСПРАВЛЕНО: захватываем только основной контент без сайдбара
+        "selector": "main > div:first-child",  # ✅ FIXED: Только верхняя часть (первые ~10 токенов)
         "wait_for": "table",
         "telegram_title": "🔓 Token Unlocks Calendar",
         "telegram_hashtags": "#TokenUnlocks #Vesting #Crypto",
