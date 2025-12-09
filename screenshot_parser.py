@@ -470,7 +470,13 @@ async def accept_cookies(page):
             'button:has-text("Accept")',
             'button:has-text("Accept All")',
             'button:has-text("Accept Cookies")',
-            'text="Accept"'
+            'button:has-text("Agree")',
+            'button:has-text("OK")',
+            'text="Accept"',
+            '[aria-label="Close"]',
+            'button[class*="close"]',
+            'button[class*="dismiss"]',
+            'button:has-text("×")',
         ]
 
         for selector in cookie_buttons:
@@ -483,6 +489,25 @@ async def accept_cookies(page):
                     return True
             except:
                 continue
+
+        # Скрываем cookie баннеры через CSS если кнопка не найдена
+        try:
+            await page.add_style_tag(content="""
+                [class*="cookie"],
+                [class*="consent"],
+                [id*="cookie"],
+                [id*="consent"],
+                div[style*="position: fixed"][style*="bottom"],
+                div[class*="fixed"][class*="bottom"],
+                [class*="cookie-banner"],
+                [role="dialog"][style*="bottom"] {
+                    display: none !important;
+                    visibility: hidden !important;
+                }
+            """)
+            logger.info("✓ Cookie-баннеры скрыты через CSS")
+        except:
+            pass
 
         return False
     except Exception as e:
