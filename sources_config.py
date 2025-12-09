@@ -118,7 +118,7 @@ SCHEDULE = {
     19: "token_unlocks",
     20: "token_unlocks",
     21: "token_unlocks",
-    22: "fear_greed",
+    22: "token_unlocks",  # ✅ ИЗМЕНЕНО: вместо fear_greed (CAPTCHA)
     23: "btc_dominance"
 }
 
