@@ -722,12 +722,28 @@ async def main_parser():
         logger.info("🚀 ЗАПУСК ПАРСЕРА СКРИНШОТОВ v1.0")
         logger.info("="*70)
         
-        # Определяем источник по расписанию
-        current_hour = datetime.now(timezone.utc).hour
-        source_key = SCHEDULE.get(current_hour)
+        # Определяем источник по времени с ротацией
+        now = datetime.now(timezone.utc)
+        current_hour = now.hour
+        current_minute = now.minute
         
-        if not source_key:
-            raise Exception(f"Нет расписания для часа {current_hour}")
+        # Вычисляем слот: 48 слотов в сутки (каждые 30 минут)
+        # 00:00 → slot 0, 00:30 → slot 1, 01:00 → slot 2, и т.д.
+        slot = current_hour * 2 + (1 if current_minute >= 30 else 0)
+        
+        # Список всех активных источников
+        active_sources = [key for key, config in SCREENSHOT_SOURCES.items() 
+                        if config.get('enabled', True)]
+        
+        if not active_sources:
+            raise Exception("Нет активных источников!")
+        
+        # Берём источник по индексу (с циклом по кругу)
+        source_key = active_sources[slot % len(active_sources)]
+        
+        logger.info(f"\n⏰ Текущее время UTC: {current_hour:02d}:{current_minute:02d}")
+        logger.info(f"📍 Слот: {slot}/48")
+        logger.info(f"🔄 Активных источников: {len(active_sources)}")
         
         source_config = SCREENSHOT_SOURCES.get(source_key)
         
