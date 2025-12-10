@@ -1,81 +1,47 @@
-name: Screenshot Parser - Every 3 Hours
+name: CMC Screenshots - TEST MODE (Every 30 min)
 
 on:
   schedule:
-    - cron: '5 0,3,6,9,12,15,18,21 * * *'
+    # 🧪 TEST MODE: каждые 30 минут
+    - cron: '*/30 * * * *'
+  
+  # Возможность запустить вручную
   workflow_dispatch:
-
-permissions:
-  contents: write
 
 jobs:
   screenshot:
     runs-on: ubuntu-22.04
-    timeout-minutes: 15
     
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        persist-credentials: true
-    
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'
-    
-    - name: Install Python dependencies
-      run: |
-        pip install --upgrade pip
-        pip install -r requirements.txt
-    
-    - name: Install Playwright browsers
-      run: |
-        playwright install chromium --with-deps
-    
-    - name: Run screenshot parser
-      env:
-        MAX_RETRIES: 2
-        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        TWITTER_ENABLED: false
-      run: |
-        python screenshot_parser.py
-    
-    - name: Commit publication history
-      if: always()
-      run: |
-        git config --local user.email "github-actions[bot]@users.noreply.github.com"
-        git config --local user.name "github-actions[bot]"
-        
-        if [ -f "publication_history.json" ]; then
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          pip install --break-system-packages playwright pillow requests tweepy
+          playwright install chromium --with-deps
+      
+      - name: Run screenshot parser
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TWITTER_ENABLED: false
+        run: |
+          python screenshot_parser.py
+      
+      - name: Commit and push if changed
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
           git add publication_history.json
-        fi
-        
-        if git diff --staged --quiet; then
-          echo "Нет изменений"
-        else
-          git commit -m "📊 Update publication history [skip ci]"
+          git diff --quiet && git diff --staged --quiet || git commit -m "📊 Update publication history [skip ci]"
           git push
-        fi
-      continue-on-error: true
-    
-    - name: Clean up old screenshots
-      if: always()
-      run: |
-        find screenshots -type f -name "*.png" -mtime +1 -delete 2>/dev/null || true
-        find screenshots -type f -name "*.jpg" -mtime +1 -delete 2>/dev/null || true
-        echo "✅ Cleanup done"
-      continue-on-error: true
-    
-    - name: Upload logs on failure
-      if: failure()
-      uses: actions/upload-artifact@v4
-      with:
-        name: screenshot-logs-${{ github.run_number }}
-        path: |
-          screenshot_parser.log
-          *.json
-        retention-days: 7
-        if-no-files-found: ignore
+
+# ⚠️ ВАЖНО: После теста верни обычный cron!
+# Обычный режим (каждые 3 часа):
+# - cron: '5 0,3,6,9,12,15,18,21 * * *'
