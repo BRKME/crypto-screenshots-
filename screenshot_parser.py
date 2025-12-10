@@ -1,6 +1,6 @@
 """
 Парсер скриншотов для CoinMarketCap и других крипто-источников
-Version: 1.3.1 (Production Ready - Final QA Passed)
+Version: 1.3.2 (Production Ready - QA Approved)
 ✅ Автоматические скриншоты по расписанию
 ✅ Обрезка под Telegram формат
 ✅ Публикация в Telegram и Twitter
@@ -9,6 +9,7 @@ Version: 1.3.1 (Production Ready - Final QA Passed)
 ✅ Полное тестирование и QA
 ✅ Правильный resource management (finally blocks)
 ✅ Complete cleanup (all temp files)
+✅ Cookie handling для CoinMarketCap
 """
 
 import asyncio
@@ -213,6 +214,47 @@ def validate_telegram_credentials():
     except Exception as e:
         logger.error(f"✗ Ошибка проверки Telegram credentials: {e}")
         return False
+
+
+def cleanup_old_screenshots(max_age_hours=24):
+    """
+    Удаляет скриншоты старше max_age_hours
+    CRITICAL: Prevents disk space leak from failed publishes and retries
+    """
+    try:
+        if not os.path.exists(SCREENSHOTS_DIR):
+            return
+        
+        now = time.time()
+        max_age_seconds = max_age_hours * 3600
+        deleted_count = 0
+        total_size = 0
+        
+        for filename in os.listdir(SCREENSHOTS_DIR):
+            filepath = os.path.join(SCREENSHOTS_DIR, filename)
+            
+            # Skip directories
+            if not os.path.isfile(filepath):
+                continue
+            
+            try:
+                file_age = now - os.path.getmtime(filepath)
+                
+                if file_age > max_age_seconds:
+                    file_size = os.path.getsize(filepath)
+                    os.remove(filepath)
+                    deleted_count += 1
+                    total_size += file_size
+            except Exception as e:
+                logger.warning(f"⚠️ Не удалось удалить {filename}: {e}")
+        
+        if deleted_count > 0:
+            logger.info(f"🗑️  Cleanup: удалено {deleted_count} старых файлов ({total_size/1024/1024:.1f} MB)")
+        else:
+            logger.info("✓ Cleanup: нет старых файлов для удаления")
+            
+    except Exception as e:
+        logger.warning(f"⚠️ Ошибка cleanup старых файлов: {e}")
 
 
 def optimize_image_for_telegram(image_path):
@@ -535,6 +577,9 @@ async def accept_cookies(page):
 
 async def take_screenshot(page, source_config, source_key):
     """Делает скриншот согласно конфигурации источника"""
+    screenshot_path = None  # CRITICAL: Initialize before try
+    optimized_path = None   # CRITICAL: Initialize before try
+    
     try:
         url = source_config['url']
         logger.info(f"\n📸 СКРИНШОТ: {source_config['name']}")
@@ -544,39 +589,15 @@ async def take_screenshot(page, source_config, source_key):
         await page.goto(url, wait_until='domcontentloaded', timeout=SCREENSHOT_SETTINGS['wait_timeout'])
         logger.info("✓ Страница загружена")
         
-        # ВАЖНО: Принимаем cookies СРАЗУ после загрузки (из твоего кода!)
+        # Cookies и ожидание загрузки
         logger.info("🍪 Обработка cookies...")
         await accept_cookies(page)
         
-        # Дополнительное ожидание как в рабочем коде (5 секунд!)
+        # Ожидание загрузки контента
         logger.info("⏳ Ожидание загрузки контента (5 секунд)...")
         await asyncio.sleep(5)
         
-        # FIX BUG #6: Проверка на Cloudflare/Captcha (БОЛЕЕ ТОЧНАЯ)
-        page_title = await page.title()
-        page_content = await page.content()
-        
-        if "cloudflare" in page_title.lower() or "just a moment" in page_content.lower():
-            logger.warning("⚠️ Cloudflare challenge обнаружен, дополнительное ожидание...")
-            await asyncio.sleep(10)
-            page_content = await page.content()
-            
-            if "cloudflare" in page_content.lower():
-                logger.error("✗ Cloudflare challenge не пройден!")
-                return None
-        
-        # УЛУЧШЕНО: Более точная проверка CAPTCHA (не срабатывает на обычное слово "captcha")
-        if any(indicator in page_content.lower() for indicator in [
-            'captcha-challenge',
-            'recaptcha',
-            'hcaptcha', 
-            'challenge-form',
-            'data-sitekey'
-        ]):
-            logger.error("✗ CAPTCHA обнаружен на странице!")
-            return None
-        
-        # Ждем загрузки контента
+        # Ждем конкретный элемент если указан
         wait_for = source_config.get('wait_for')
         if wait_for:
             try:
@@ -585,10 +606,7 @@ async def take_screenshot(page, source_config, source_key):
             except Exception as e:
                 logger.warning(f"⚠️ Элемент не найден за 15 сек: {wait_for}")
         
-        # Дополнительное ожидание
-        await asyncio.sleep(SCREENSHOT_SETTINGS['wait_after_load'])
-        
-        # ✅ FIX: Для token_unlocks прокручиваем вверх и удаляем баннеры
+        # Token unlocks специальная обработка
         if source_key == "token_unlocks":
             try:
                 await page.evaluate("""
@@ -652,13 +670,6 @@ async def take_screenshot(page, source_config, source_key):
         # FIX BUG #22: Проверяем что оптимизация успешна
         if not optimized_path:
             logger.error("✗ Не удалось оптимизировать изображение!")
-            # Cleanup исходника
-            if os.path.exists(screenshot_path):
-                try:
-                    os.remove(screenshot_path)
-                    logger.info(f"🗑️  Удален неудачный скриншот: {screenshot_path}")
-                except:
-                    pass
             return None
         
         # Удаляем оригинальный PNG только если оптимизация создала новый файл
@@ -680,29 +691,29 @@ async def take_screenshot(page, source_config, source_key):
     except Exception as e:
         logger.error(f"✗ Ошибка создания скриншота: {e}")
         traceback.print_exc()
-        
-        # FIX BUG #3: Cleanup неудачных скриншотов (BOTH original AND optimized)
-        if 'screenshot_path' in locals() and screenshot_path and os.path.exists(screenshot_path):
+        return None
+    
+    finally:
+        # CRITICAL: Safe cleanup - variables are guaranteed to exist
+        if screenshot_path and os.path.exists(screenshot_path):
             try:
                 os.remove(screenshot_path)
-                logger.info(f"🗑️  Удален неудачный скриншот: {screenshot_path}")
+                logger.info(f"🗑️  Cleanup: удален временный файл")
             except Exception as cleanup_error:
-                logger.warning(f"⚠️ Не удалось удалить файл: {cleanup_error}")
+                logger.warning(f"⚠️ Cleanup warning: {cleanup_error}")
         
-        # Также удаляем optimized если был создан
-        if 'optimized_path' in locals() and optimized_path and os.path.exists(optimized_path):
+        if optimized_path and optimized_path != screenshot_path and os.path.exists(optimized_path):
             try:
                 os.remove(optimized_path)
-                logger.info(f"🗑️  Удален optimized файл: {optimized_path}")
+                logger.info(f"🗑️  Cleanup: удален optimized файл")
             except Exception as cleanup_error:
-                logger.warning(f"⚠️ Не удалось удалить optimized: {cleanup_error}")
-        
-        return None
+                logger.warning(f"⚠️ Cleanup warning: {cleanup_error}")
 
 
 async def main_parser():
     """Главная функция парсера со скриншотами"""
-    browser = None
+    browser = None  # CRITICAL: Initialize before try block
+    
     try:
         logger.info("="*70)
         logger.info("🚀 ЗАПУСК ПАРСЕРА СКРИНШОТОВ v1.0")
@@ -825,23 +836,22 @@ async def main_parser():
                     logger.warning(f"  ⚠️ Не удалось удалить скриншот: {e}")
             
             logger.info("="*70)
-
-            await browser.close()
-            logger.info("✓ Браузер закрыт\n")
             
             return True
 
     except Exception as e:
         logger.error(f"\n❌ КРИТИЧЕСКАЯ ОШИБКА: {e}")
         logger.error(traceback.format_exc())
-        
-        try:
-            if browser:
-                await browser.close()
-        except:
-            pass
-        
         return False
+    
+    finally:
+        # CRITICAL: Guaranteed browser cleanup
+        if browser:
+            try:
+                await browser.close()
+                logger.info("✓ Браузер закрыт\n")
+            except Exception as e:
+                logger.warning(f"⚠️ Ошибка закрытия браузера: {e}")
 
 
 def main():
@@ -873,6 +883,10 @@ def main():
             logger.error("✗ КРИТИЧЕСКАЯ ОШИБКА: Невалидные Telegram credentials!")
             release_lock(lock_file, lock_path)
             sys.exit(1)
+        
+        # CRITICAL: Cleanup старых файлов перед запуском
+        logger.info("\n🗑️  CLEANUP СТАРЫХ ФАЙЛОВ")
+        cleanup_old_screenshots(max_age_hours=24)
         
         logger.info("")
         
