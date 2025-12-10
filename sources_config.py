@@ -1,6 +1,6 @@
 """
 Конфигурация источников для скриншотов
-Version: 1.2 - Fixed token_unlocks to show only top 10 tokens
+Version: 1.3 - Automatic rotation every 30 minutes (no more SCHEDULE dict)
 """
 
 # Конфигурация источников для скриншотов
@@ -67,7 +67,7 @@ SCREENSHOT_SOURCES = {
         "wait_for": "table",
         "telegram_title": "📈 Crypto Derivatives Market",
         "telegram_hashtags": "#Derivatives #Futures #Trading",
-        "enabled": True,
+        "enabled": False,  # ❌ Отключен: CMC anti-bot защита
         "priority": 6
     },
     
@@ -94,33 +94,26 @@ SCREENSHOT_SOURCES = {
     }
 }
 
-# Расписание публикаций (час UTC : source_key)
-SCHEDULE = {
-    0: "fear_greed",
-    1: "fear_greed",
-    2: "btc_dominance",
-    3: "btc_dominance",
-    4: "btc_etf",
-    5: "btc_etf",
-    6: "btc_etf",
-    7: "altcoin_season",
-    8: "altcoin_season",
-    9: "altcoin_season",
-    10: "derivatives",
-    11: "derivatives",
-    12: "derivatives",
-    13: "eth_etf",
-    14: "eth_etf",
-    15: "eth_etf",
-    16: "top_gainers",
-    17: "top_gainers",
-    18: "top_gainers",
-    19: "token_unlocks",
-    20: "token_unlocks",
-    21: "token_unlocks",
-    22: "token_unlocks",  # ✅ ИЗМЕНЕНО: вместо fear_greed (CAPTCHA)
-    23: "btc_dominance"
-}
+# ===============================================================================
+# РАСПИСАНИЕ - АВТОМАТИЧЕСКАЯ РОТАЦИЯ
+# ===============================================================================
+# Источники публикуются автоматически по кругу каждые 30 минут.
+# Логика: 48 слотов в сутки (24 часа × 2), источники берутся по порядку из
+# SCREENSHOT_SOURCES (только enabled=True).
+#
+# При 7 активных источниках (derivatives отключен):
+# - 00:00 → fear_greed
+# - 00:30 → btc_dominance  
+# - 01:00 → btc_etf
+# - 01:30 → altcoin_season
+# - 02:00 → eth_etf
+# - 02:30 → top_gainers
+# - 03:00 → token_unlocks
+# - 03:30 → fear_greed (снова по кругу)
+# - ...и так далее
+#
+# ⚠️ ВАЖНО: Порядок источников в SCREENSHOT_SOURCES определяет порядок публикации!
+# ===============================================================================
 
 # Настройки для обработки изображений
 IMAGE_SETTINGS = {
