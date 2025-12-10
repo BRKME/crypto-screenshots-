@@ -8,6 +8,10 @@ on:
   # Возможность запустить вручную
   workflow_dispatch:
 
+# ✅ FIX: Даём права на push
+permissions:
+  contents: write
+
 jobs:
   screenshot:
     runs-on: ubuntu-22.04
