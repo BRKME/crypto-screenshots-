@@ -17,10 +17,10 @@ SCREENSHOT_SOURCES = {
     },
     
     "altcoin_season": {
-        "name": "Top 100 Coins Performance (90 Days)",
+        "name": "Altcoin Season Index",
         "url": "https://coinmarketcap.com/charts/altcoin-season-index/",
-        "selector": None,
-        "wait_for": "canvas",
+        "selector": "div.sc-65e7f566-0.kijrGb",  # ✅ Только верхний блок с индексом
+        "wait_for": "div.sc-65e7f566-0.kijrGb",
         "telegram_title": "🌈 Altcoin Season Index",
         "telegram_hashtags": "#AltcoinSeason #Altcoins #CryptoMarket",
         "enabled": True,
