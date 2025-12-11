@@ -5,15 +5,15 @@
     "derivatives": "2025-12-10T12:58:24.353929+00:00",
     "eth_etf": "2025-12-11T05:29:14.874742+00:00",
     "top_gainers": "2025-12-10T23:42:13.424156+00:00",
-    "fear_greed": "2025-12-11T03:46:42.320032+00:00",
+    "fear_greed": "2025-12-11T07:29:55.372755+00:00",
     "btc_dominance": "2025-12-11T04:39:43.532968+00:00",
     "btc_etf": "2025-12-11T05:50:15.103847+00:00"
   },
   "last_publication": {
-    "source": "token_unlocks",
-    "name": "Token Unlocks",
-    "published_at": "2025-12-11T06:42:21.841527+00:00",
-    "hour_utc": 6,
+    "source": "fear_greed",
+    "name": "Crypto Fear & Greed Index",
+    "published_at": "2025-12-11T07:29:55.372771+00:00",
+    "hour_utc": 7,
     "telegram": true,
     "twitter": false
   }
