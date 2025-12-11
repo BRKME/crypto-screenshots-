@@ -633,9 +633,28 @@ async def take_screenshot(page, source_config, source_key):
                                 console.log('Removed banner:', el.className);
                             }
                         });
+                        
+                        // ✅ НОВОЕ: Скрываем все строки после первых 5
+                        const table = document.querySelector('table');
+                        if (table) {
+                            const tbody = table.querySelector('tbody');
+                            if (tbody) {
+                                const rows = tbody.querySelectorAll('tr');
+                                console.log(`Found ${rows.length} rows in table`);
+                                
+                                // Скрываем строки начиная с 6-й (индекс 5)
+                                rows.forEach((row, index) => {
+                                    if (index >= 5) {
+                                        row.style.display = 'none';
+                                        console.log(`Hidden row ${index + 1}`);
+                                    }
+                                });
+                                console.log('Showing only first 5 rows');
+                            }
+                        }
                     }
                 """)
-                logger.info("✓ Token unlocks: прокручено вверх, баннеры удалены")
+                logger.info("✓ Token unlocks: прокручено вверх, баннеры удалены, оставлены первые 5 строк")
                 await asyncio.sleep(1)
             except Exception as e:
                 logger.warning(f"⚠️ Не удалось обработать token_unlocks: {e}")
