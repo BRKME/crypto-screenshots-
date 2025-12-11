@@ -7,13 +7,13 @@
     "top_gainers": "2025-12-11T09:32:41.223201+00:00",
     "fear_greed": "2025-12-11T10:31:53.577653+00:00",
     "btc_dominance": "2025-12-11T11:43:41.321187+00:00",
-    "btc_etf": "2025-12-11T05:50:15.103847+00:00"
+    "btc_etf": "2025-12-11T12:58:22.201627+00:00"
   },
   "last_publication": {
-    "source": "btc_dominance",
-    "name": "Bitcoin Dominance",
-    "published_at": "2025-12-11T11:43:41.321203+00:00",
-    "hour_utc": 11,
+    "source": "btc_etf",
+    "name": "Bitcoin ETF Tracker",
+    "published_at": "2025-12-11T12:58:22.201645+00:00",
+    "hour_utc": 12,
     "telegram": true,
     "twitter": false
   }
