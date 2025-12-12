@@ -98,15 +98,15 @@ SCREENSHOT_SOURCES = {
     "token_unlocks": {
         "name": "Token Unlocks",
         "url": "https://tokenomist.ai/",
-        "selector": "[role='group'][aria-roledescription='slide']",  # Карточка с Cliff Unlocks
-        "wait_for": "[role='group'][aria-roledescription='slide']",
+        "selector": None,  # ✅ Захватываем весь viewport (карточка будет видна)
+        "wait_for": "div",  # Ждем загрузки страницы
         "telegram_title": "🔓 Cliff Unlocks Next 7D",
         "telegram_hashtags": "#TokenUnlocks #Vesting #Crypto",
         "enabled": True,
         "priority": 8,
         "skip_width_padding": True,  # ✅ НЕ добавлять боковой padding
-        "element_padding": {"top": 50, "right": 20, "bottom": 50, "left": 20},
-        "scale": 2.0  # ✅ Увеличить в 2 раза
+        "hide_elements": "table, [class*='table'], [class*='Table']",  # ✅ Скрыть таблицу внизу
+        "scale": 1.0  # ✅ Без увеличения (карточка уже видна хорошо)
     },
     
     "heatmap": {
