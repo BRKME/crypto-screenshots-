@@ -4,16 +4,16 @@
     "altcoin_season": "2025-12-12T07:46:18.334883+00:00",
     "derivatives": "2025-12-10T12:58:24.353929+00:00",
     "eth_etf": "2025-12-12T08:37:40.259752+00:00",
-    "top_gainers": "2025-12-11T16:38:49.539277+00:00",
+    "top_gainers": "2025-12-12T09:30:57.780136+00:00",
     "fear_greed": "2025-12-12T07:29:27.408550+00:00",
     "btc_dominance": "2025-12-12T04:38:06.703012+00:00",
     "btc_etf": "2025-12-12T05:49:03.416739+00:00"
   },
   "last_publication": {
-    "source": "eth_etf",
-    "name": "Ethereum ETF Tracker",
-    "published_at": "2025-12-12T08:37:40.259775+00:00",
-    "hour_utc": 8,
+    "source": "top_gainers",
+    "name": "Top Gainers",
+    "published_at": "2025-12-12T09:30:57.780155+00:00",
+    "hour_utc": 9,
     "telegram": true,
     "twitter": false
   }
