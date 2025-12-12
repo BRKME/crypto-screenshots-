@@ -1,6 +1,6 @@
 {
   "last_published": {
-    "token_unlocks": "2025-12-12T10:30:11.064073+00:00",
+    "token_unlocks": "2025-12-12T13:39:26.886281+00:00",
     "altcoin_season": "2025-12-12T11:25:56.226779+00:00",
     "derivatives": "2025-12-10T12:58:24.353929+00:00",
     "eth_etf": "2025-12-12T08:37:40.259752+00:00",
@@ -10,10 +10,10 @@
     "btc_etf": "2025-12-12T12:55:49.569434+00:00"
   },
   "last_publication": {
-    "source": "btc_etf",
-    "name": "Bitcoin ETF Tracker",
-    "published_at": "2025-12-12T12:55:49.569453+00:00",
-    "hour_utc": 12,
+    "source": "token_unlocks",
+    "name": "Token Unlocks",
+    "published_at": "2025-12-12T13:39:26.886300+00:00",
+    "hour_utc": 13,
     "telegram": true,
     "twitter": false
   }
