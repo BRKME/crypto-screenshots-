@@ -1,7 +1,7 @@
 {
   "last_published": {
     "token_unlocks": "2025-12-12T10:30:11.064073+00:00",
-    "altcoin_season": "2025-12-12T07:46:18.334883+00:00",
+    "altcoin_season": "2025-12-12T11:25:56.226779+00:00",
     "derivatives": "2025-12-10T12:58:24.353929+00:00",
     "eth_etf": "2025-12-12T08:37:40.259752+00:00",
     "top_gainers": "2025-12-12T09:30:57.780136+00:00",
@@ -10,10 +10,10 @@
     "btc_etf": "2025-12-12T05:49:03.416739+00:00"
   },
   "last_publication": {
-    "source": "fear_greed",
-    "name": "Crypto Fear & Greed Index",
-    "published_at": "2025-12-12T10:52:33.175853+00:00",
-    "hour_utc": 10,
+    "source": "altcoin_season",
+    "name": "Altcoin Season Index",
+    "published_at": "2025-12-12T11:25:56.226795+00:00",
+    "hour_utc": 11,
     "telegram": true,
     "twitter": false
   }
