@@ -659,35 +659,94 @@ async def take_screenshot(page, source_config, source_key):
         close_modal = source_config.get('close_modal', False)
         if close_modal:
             try:
-                await page.evaluate("""() => {
+                # Метод 1: Нажать Escape
+                await page.keyboard.press('Escape')
+                await asyncio.sleep(0.5)
+                logger.info("  ✓ Нажат Escape для закрытия модалки")
+                
+                # Метод 2: Клик по кнопкам закрытия
+                closed = await page.evaluate("""() => {
                     // Попытка закрыть модальное окно разными способами
                     const closeSelectors = [
+                        'button:has-text("Maybe Later")',  // Специально для COIN360
+                        'button:has-text("Later")',
                         '[aria-label="Close"]',
                         '[data-dismiss="modal"]',
                         '.close',
                         '.modal-close',
                         'button[class*="close"]',
-                        '[class*="closeButton"]'
+                        '[class*="closeButton"]',
+                        'button[type="button"]',  // Любые кнопки
+                        'svg[class*="close"]',    // SVG иконки закрытия
+                        '[role="button"][aria-label*="close" i]'
                     ];
                     
                     for (const sel of closeSelectors) {
-                        const btn = document.querySelector(sel);
-                        if (btn) {
-                            btn.click();
-                            return true;
+                        const btns = document.querySelectorAll(sel);
+                        for (const btn of btns) {
+                            // Проверяем что это похоже на кнопку закрытия
+                            const text = btn.textContent?.toLowerCase() || '';
+                            if (text.includes('close') || text.includes('later') || text.includes('×') || text.includes('✕') || !text) {
+                                btn.click();
+                                return true;
+                            }
                         }
                     }
-                    
-                    // Попытка убрать overlay
-                    const overlays = document.querySelectorAll('[class*="modal"], [class*="overlay"], [class*="popup"]');
-                    overlays.forEach(el => el.style.display = 'none');
-                    
                     return false;
                 }""")
-                await asyncio.sleep(1)  # Даем время на закрытие
-                logger.info("  ✓ Попытка закрыть модальное окно")
+                await asyncio.sleep(0.5)
+                
+                # Метод 3: Клик по backdrop (темный фон)
+                await page.evaluate("""() => {
+                    const backdrops = document.querySelectorAll('[class*="backdrop"], [class*="overlay"], [class*="modal-backdrop"]');
+                    backdrops.forEach(el => el.click());
+                }""")
+                await asyncio.sleep(0.5)
+                
+                # Метод 4: Принудительное скрытие всех модальных элементов
+                await page.evaluate("""() => {
+                    // Ищем все элементы с position: fixed и высоким z-index
+                    const allElements = document.querySelectorAll('*');
+                    allElements.forEach(el => {
+                        const style = window.getComputedStyle(el);
+                        const zIndex = parseInt(style.zIndex);
+                        const position = style.position;
+                        
+                        // Если fixed/absolute с высоким z-index - скрываем
+                        if ((position === 'fixed' || position === 'absolute') && zIndex > 1000) {
+                            el.style.display = 'none';
+                        }
+                    });
+                    
+                    // Также скрываем все явные модалки
+                    const modals = document.querySelectorAll('[class*="modal"], [class*="Modal"], [class*="dialog"], [class*="Dialog"], [class*="popup"], [class*="Popup"]');
+                    modals.forEach(el => {
+                        el.style.display = 'none';
+                        el.style.visibility = 'hidden';
+                        el.style.opacity = '0';
+                    });
+                }""")
+                await asyncio.sleep(1)
+                
+                logger.info("  ✓ Модальное окно закрыто (4 метода)")
             except Exception as e:
                 logger.warning(f"  ⚠️ Не удалось закрыть модальное окно: {e}")
+        
+        # Скрываем ненужные элементы если указано
+        hide_elements = source_config.get('hide_elements')
+        if hide_elements:
+            try:
+                await page.evaluate("""(selector) => {
+                    const elements = document.querySelectorAll(selector);
+                    elements.forEach(el => {
+                        el.style.display = 'none';
+                        el.style.visibility = 'hidden';
+                    });
+                }""", hide_elements)
+                await asyncio.sleep(0.5)
+                logger.info(f"  ✓ Скрыты элементы: {hide_elements}")
+            except Exception as e:
+                logger.warning(f"  ⚠️ Не удалось скрыть элементы: {e}")
         
         selector = source_config.get('selector')
         element_padding = source_config.get('element_padding', 0)  # Может быть int или dict
