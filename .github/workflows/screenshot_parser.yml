@@ -27,13 +27,14 @@ jobs:
       
       - name: Install dependencies
         run: |
-          pip install --break-system-packages playwright pillow requests tweepy
+          pip install --break-system-packages -r requirements.txt
           playwright install chromium --with-deps
       
       - name: Run screenshot parser
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           TWITTER_ENABLED: false
         run: |
           python screenshot_parser.py
