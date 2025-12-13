@@ -6,16 +6,16 @@
     "eth_etf": "2025-12-13T13:31:45.704109+00:00",
     "top_gainers": "2025-12-13T14:43:37.665406+00:00",
     "fear_greed": "2025-12-13T04:00:36.422762+00:00",
-    "btc_dominance": "2025-12-13T09:26:01.132594+00:00",
+    "btc_dominance": "2025-12-13T15:25:13.390680+00:00",
     "btc_etf": "2025-12-13T14:23:22.391960+00:00",
     "heatmap": "2025-12-13T11:40:18.681864+00:00"
   },
   "last_publication": {
-    "source": "top_gainers",
-    "name": "Top Gainers",
-    "published_at": "2025-12-13T14:43:37.665424+00:00",
-    "hour_utc": 14,
-    "telegram": true,
+    "source": "btc_dominance",
+    "name": "Bitcoin Dominance",
+    "published_at": "2025-12-13T15:25:13.390696+00:00",
+    "hour_utc": 15,
+    "telegram": false,
     "twitter": false
   }
 }
