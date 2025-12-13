@@ -36,20 +36,6 @@ from sources_config import (
     SCREENSHOT_SETTINGS
 )
 
-# OpenAI Integration для AI комментариев
-try:
-    from openai_integration import get_ai_comment, add_ai_comment_to_caption
-    OPENAI_ENABLED = True
-    logger.info("✓ OpenAI integration loaded")
-except ImportError as e:
-    OPENAI_ENABLED = False
-    logger.warning(f"⚠️ OpenAI integration not available: {e}")
-    def get_ai_comment(*args, **kwargs):
-        return None
-    def add_ai_comment_to_caption(caption, *args, **kwargs):
-        return caption
-
-
 # Пытаемся импортировать fcntl (только Unix)
 try:
     import fcntl
@@ -62,11 +48,30 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('screenshot_parser.log', encoding='utf-8'),
         logging.StreamHandler(sys.stdout)
     ]
 )
 logger = logging.getLogger(__name__)
+
+# OpenAI Integration для AI комментариев (после logger!)
+try:
+    from openai_integration import get_ai_comment, add_ai_comment_to_caption
+    OPENAI_ENABLED = True
+    logger.info("✓ OpenAI integration loaded")
+except ImportError as e:
+    OPENAI_ENABLED = False
+    logger.warning(f"⚠️ OpenAI integration not available: {e}")
+    def get_ai_comment(*args, **kwargs):
+        return None
+    def add_ai_comment_to_caption(caption, *args, **kwargs):
+        return caption
+except Exception as e:
+    OPENAI_ENABLED = False
+    logger.warning(f"⚠️ OpenAI integration error: {e}")
+    def get_ai_comment(*args, **kwargs):
+        return None
+    def add_ai_comment_to_caption(caption, *args, **kwargs):
+        return caption
 
 # Глобальные настройки
 MAX_RETRIES = int(os.getenv('MAX_RETRIES', '2'))
