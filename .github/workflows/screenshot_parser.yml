@@ -27,6 +27,7 @@ jobs:
       
       - name: Install dependencies
         run: |
+          pip install --break-system-packages --upgrade --force-reinstall openai==1.35.0
           pip install --break-system-packages -r requirements.txt
           playwright install chromium --with-deps
       
