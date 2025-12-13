@@ -36,6 +36,20 @@ from sources_config import (
     SCREENSHOT_SETTINGS
 )
 
+# OpenAI Integration для AI комментариев
+try:
+    from openai_integration import get_ai_comment, add_ai_comment_to_caption
+    OPENAI_ENABLED = True
+    logger.info("✓ OpenAI integration loaded")
+except ImportError as e:
+    OPENAI_ENABLED = False
+    logger.warning(f"⚠️ OpenAI integration not available: {e}")
+    def get_ai_comment(*args, **kwargs):
+        return None
+    def add_ai_comment_to_caption(caption, *args, **kwargs):
+        return caption
+
+
 # Пытаемся импортировать fcntl (только Unix)
 try:
     import fcntl
@@ -963,6 +977,18 @@ async def main_parser():
             title_escaped = html.escape(title)
             hashtags_escaped = html.escape(hashtags)
             caption = f"<b>{title_escaped}</b>\n\n{hashtags_escaped}"
+            
+            # 🤖 AI КОММЕНТАРИЙ от OpenAI
+            if OPENAI_ENABLED:
+                logger.info("\n🤖 ГЕНЕРАЦИЯ AI КОММЕНТАРИЯ")
+                ai_result = get_ai_comment(source_key, result['screenshot_path'])
+                if ai_result:
+                    caption = add_ai_comment_to_caption(caption, ai_result)
+                    logger.info("  ✓ AI комментарий добавлен к caption")
+                else:
+                    logger.info("  ⚠️ AI комментарий не получен")
+            else:
+                logger.info("  ℹ️  OpenAI отключен")
             
             # FIX ISSUE #10: Валидация длины caption (Telegram limit: 1024)
             if len(caption) > 1024:
