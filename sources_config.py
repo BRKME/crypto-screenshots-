@@ -17,7 +17,8 @@ SCREENSHOT_SOURCES = {
         "skip_width_padding": True,  # ✅ БЕЗ огромных полей
         "element_padding": {"top": 40, "right": 30, "bottom": 40, "left": 30},  # Небольшие отступы
         "scale": 1.0,  # ✅ Нормальный размер
-        "hide_elements": "p, [class*='description'], [class*='Description'], [data-role='description']"  # ✅ Скрыть текстовые описания
+        "hide_elements": "p, [class*='description'], [class*='Description'], [data-role='description']",  # ✅ Скрыть текстовые описания
+        "crop": {"top": 10, "right": 30, "bottom": 0, "left": 0}  # ✅ НОВОЕ: Обрезка справа и сверху
     },
     
     "altcoin_season": {
