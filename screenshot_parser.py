@@ -55,7 +55,7 @@ logger = logging.getLogger(__name__)
 
 # OpenAI Integration для AI комментариев (после logger!)
 try:
-    from openai_integration import get_ai_comment, add_ai_comment_to_caption
+    from openai_integration import get_ai_comment, add_alpha_take_to_caption
     OPENAI_ENABLED = True
     logger.info("✓ OpenAI integration loaded")
 except ImportError as e:
@@ -63,15 +63,15 @@ except ImportError as e:
     logger.warning(f"⚠️ OpenAI integration not available: {e}")
     def get_ai_comment(*args, **kwargs):
         return None
-    def add_ai_comment_to_caption(caption, *args, **kwargs):
-        return caption
+    def add_alpha_take_to_caption(title, hashtags, *args, **kwargs):
+        return f"<b>{title}</b>\n\n{hashtags}"
 except Exception as e:
     OPENAI_ENABLED = False
     logger.warning(f"⚠️ OpenAI integration error: {e}")
     def get_ai_comment(*args, **kwargs):
         return None
-    def add_ai_comment_to_caption(caption, *args, **kwargs):
-        return caption
+    def add_alpha_take_to_caption(title, hashtags, *args, **kwargs):
+        return f"<b>{title}</b>\n\n{hashtags}"
 
 # Глобальные настройки
 MAX_RETRIES = int(os.getenv('MAX_RETRIES', '2'))
@@ -275,8 +275,14 @@ def cleanup_old_screenshots(max_age_hours=24):
         logger.warning(f"⚠️ Ошибка cleanup старых файлов: {e}")
 
 
-def optimize_image_for_telegram(image_path, skip_width_padding=False):
-    """Оптимизирует изображение для Telegram"""
+def optimize_image_for_telegram(image_path, skip_width_padding=False, crop=None):
+    """Оптимизирует изображение для Telegram
+    
+    Args:
+        image_path: Путь к изображению
+        skip_width_padding: Пропустить добавление padding по ширине
+        crop: Dict с параметрами обрезки {"top": N, "right": N, "bottom": N, "left": N} в пикселях
+    """
     try:
         logger.info(f"🖼️  Оптимизация изображения: {image_path}")
         
@@ -292,6 +298,24 @@ def optimize_image_for_telegram(image_path, skip_width_padding=False):
                 img = img.convert('RGBA')
             background.paste(img, mask=img.split()[-1] if img.mode in ('RGBA', 'LA') else None)
             img = background
+        
+        # ✅ НОВОЕ: Обрезка изображения
+        if crop:
+            top = crop.get('top', 0)
+            right = crop.get('right', 0)
+            bottom = crop.get('bottom', 0)
+            left = crop.get('left', 0)
+            
+            width, height = img.size
+            crop_box = (
+                left,                    # left
+                top,                     # top
+                width - right,           # right
+                height - bottom          # bottom
+            )
+            
+            img = img.crop(crop_box)
+            logger.info(f"  ✂️  Обрезано: {img.size[0]}x{img.size[1]} (top:{top}, right:{right}, bottom:{bottom}, left:{left})")
         
         # CRITICAL: Валидация размеров изображения
         if img.size[0] == 0 or img.size[1] == 0:
@@ -844,7 +868,8 @@ async def take_screenshot(page, source_config, source_key):
         
         # Оптимизируем для Telegram
         skip_width_padding = source_config.get('skip_width_padding', False)
-        optimized_path = optimize_image_for_telegram(screenshot_path, skip_width_padding=skip_width_padding)
+        crop = source_config.get('crop', None)  # ✅ НОВОЕ: Получаем параметры обрезки
+        optimized_path = optimize_image_for_telegram(screenshot_path, skip_width_padding=skip_width_padding, crop=crop)
         
         # FIX BUG #22: Проверяем что оптимизация успешна
         if not optimized_path:
@@ -981,19 +1006,21 @@ async def main_parser():
             # FIX ISSUE #26: HTML escape для безопасности
             title_escaped = html.escape(title)
             hashtags_escaped = html.escape(hashtags)
-            caption = f"<b>{title_escaped}</b>\n\n{hashtags_escaped}"
             
-            # 🤖 AI КОММЕНТАРИЙ от OpenAI
+            # 🤖 ALPHA TAKE от OpenAI
+            ai_result = None
             if OPENAI_ENABLED:
-                logger.info("\n🤖 ГЕНЕРАЦИЯ AI КОММЕНТАРИЯ")
+                logger.info("\n🤖 ГЕНЕРАЦИЯ ALPHA TAKE")
                 ai_result = get_ai_comment(source_key, result['screenshot_path'])
                 if ai_result:
-                    caption = add_ai_comment_to_caption(caption, ai_result)
-                    logger.info("  ✓ AI комментарий добавлен к caption")
+                    logger.info("  ✓ Alpha Take получен")
                 else:
-                    logger.info("  ⚠️ AI комментарий не получен")
+                    logger.info("  ⚠️ Alpha Take не получен")
             else:
                 logger.info("  ℹ️  OpenAI отключен")
+            
+            # Формируем финальный caption
+            caption = add_alpha_take_to_caption(title_escaped, hashtags_escaped, ai_result)
             
             # FIX ISSUE #10: Валидация длины caption (Telegram limit: 1024)
             if len(caption) > 1024:
