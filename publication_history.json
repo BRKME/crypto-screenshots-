@@ -7,13 +7,13 @@
     "top_gainers": "2025-12-13T23:42:29.914302+00:00",
     "fear_greed": "2025-12-14T03:49:03.589600+00:00",
     "btc_dominance": "2025-12-14T04:40:18.387290+00:00",
-    "btc_etf": "2025-12-14T02:11:26.760095+00:00",
+    "btc_etf": "2025-12-14T05:46:22.858822+00:00",
     "heatmap": "2025-12-13T11:40:18.681864+00:00"
   },
   "last_publication": {
-    "source": "eth_etf",
-    "name": "Ethereum ETF Tracker",
-    "published_at": "2025-12-14T05:26:43.644403+00:00",
+    "source": "btc_etf",
+    "name": "Bitcoin ETF Tracker",
+    "published_at": "2025-12-14T05:46:22.858842+00:00",
     "hour_utc": 5,
     "telegram": true,
     "twitter": false
