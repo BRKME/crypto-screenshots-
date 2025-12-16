@@ -3,7 +3,7 @@ name: CMC Screenshots - TEST MODE (Every 30 min)
 on:
   schedule:
     # 🧪 TEST MODE: каждые 30 минут
-    - cron: '*/30 * * * *'
+    - cron: '*/20 * * * *'
   
   # Возможность запустить вручную
   workflow_dispatch:
