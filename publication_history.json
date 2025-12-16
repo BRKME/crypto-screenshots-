@@ -1,6 +1,6 @@
 {
   "last_published": {
-    "token_unlocks": "2025-12-16T15:32:02.546146+00:00",
+    "token_unlocks": "2025-12-16T15:53:16.806097+00:00",
     "altcoin_season": "2025-12-14T11:21:33.568187+00:00",
     "derivatives": "2025-12-10T12:58:24.353929+00:00",
     "eth_etf": "2025-12-14T08:32:52.632549+00:00",
@@ -13,7 +13,7 @@
   "last_publication": {
     "source": "token_unlocks",
     "name": "Token Unlocks",
-    "published_at": "2025-12-16T15:32:02.546163+00:00",
+    "published_at": "2025-12-16T15:53:16.806112+00:00",
     "hour_utc": 15,
     "telegram": true,
     "twitter": false
