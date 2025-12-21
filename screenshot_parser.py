@@ -996,15 +996,20 @@ async def main_parser():
         last_published = history.get("last_published", {}).get(source_key)
         
         if last_published:
-            last_time = datetime.fromisoformat(last_published)
-            now = datetime.now(timezone.utc)
-            time_since_last = (now - last_time).total_seconds() / 60  # минуты
-            
-            # Cooldown 30 минут - не публиковать один источник чаще
-            if time_since_last < 30:
-                logger.info(f"⏸️  Источник {source_key} уже публиковался {int(time_since_last)} минут назад")
-                logger.info(f"⏸️  Cooldown: ждем еще {int(30 - time_since_last)} минут")
-                return True  # ✅ Это не ошибка - просто cooldown
+            try:
+                last_time = datetime.fromisoformat(last_published)
+                now = datetime.now(timezone.utc)
+                time_since_last = (now - last_time).total_seconds() / 60  # минуты
+                
+                # Cooldown 30 минут - не публиковать один источник чаще
+                if time_since_last < 30:
+                    logger.info(f"⏸️  Источник {source_key} уже публиковался {int(time_since_last)} минут назад")
+                    logger.info(f"⏸️  Cooldown: ждем еще {int(30 - time_since_last)} минут")
+                    return True  # ✅ Это не ошибка - просто cooldown
+            except (ValueError, TypeError) as e:
+                logger.warning(f"⚠️ Невалидный формат времени в истории для {source_key}: {e}")
+                logger.info(f"  Продолжаем выполнение...")
+                # Продолжаем - публикуем, так как не можем определить когда была последняя публикация
         
         source_config = SCREENSHOT_SOURCES.get(source_key)
         
@@ -1036,11 +1041,15 @@ async def main_parser():
             custom_ua = source_config.get('custom_user_agent')
             user_agent = custom_ua if custom_ua else 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
             
+            # ✅ Получаем custom viewport если задан в конфиге
+            viewport_width = source_config.get('viewport_width', SCREENSHOT_SETTINGS['viewport_width'])
+            viewport_height = source_config.get('viewport_height', SCREENSHOT_SETTINGS['viewport_height'])
+            
             context = await browser.new_context(
                 user_agent=user_agent,
                 viewport={
-                    'width': SCREENSHOT_SETTINGS['viewport_width'], 
-                    'height': SCREENSHOT_SETTINGS['viewport_height']
+                    'width': viewport_width, 
+                    'height': viewport_height
                 },
                 # ✅ Дополнительные headers для обхода блокировки
                 extra_http_headers={
@@ -1147,6 +1156,11 @@ async def main_parser():
             # Обновляем историю публикаций
             history = load_publication_history()
             current_hour = datetime.now(timezone.utc).hour  # ✅ Добавил определение
+            
+            # ✅ ИСПРАВЛЕНИЕ БАГ #1: Инициализируем last_published если его нет
+            if "last_published" not in history:
+                history["last_published"] = {}
+            
             history["last_published"][source_key] = datetime.now(timezone.utc).isoformat()
             history["last_publication"] = {
                 "source": source_key,
