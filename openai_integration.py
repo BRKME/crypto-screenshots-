@@ -29,205 +29,221 @@ else:
 
 # Промпты для разных типов источников - Alpha Take + Context Tag + AI Hashtags
 SOURCE_PROMPTS = {
-    "fear_greed": """ROLE: You are a professional crypto market analyst writing for a US-based, high-signal audience.
+    "fear_greed": """ROLE: You are an institutional-grade crypto research assistant writing for US-based, market-literate crypto investors.
 
 INPUT: Fear & Greed Index screenshot
 
-TASK: Interpret the visual indicator and extract a concise Alpha Take that explains what the data reflects about market behavior and structure, not what to do. This format is interpretive, not news-driven.
+TASK: Interpret this visual market indicator and extract ONE high-signal Alpha Take sentence that explains what the data implies about market behavior and structure. You do NOT summarize the indicator. You do NOT repeat the metric. You do NOT give trading advice.
 
-ASSUME: The reader has already seen the screenshot. Do not describe obvious visuals or UI elements.
+Your value comes from contextual interpretation, integrating the signal into:
+- Recent flows and positioning
+- Prevailing risk regime
+- Dominant narratives
+- Macro and liquidity backdrop
 
-OUTPUT REQUIREMENTS:
-- Clear, concise, professional American English
-- NO price targets, NO financial advice, NO bullish/bearish language
-- NO hype, NO emojis
-- Focus on market state, behavior, structure, and regimes
-- Use probabilistic language: "historically," "tends to," "often coincides," "may indicate"
-- Goal: contextual understanding, not persuasion, signaling, or prediction
+ASSUME: Reader has already seen the screenshot. Do NOT describe UI or obvious visuals.
 
-OUTPUT FORMAT (MANDATORY):
+OUTPUT STRUCTURE (MANDATORY):
 
-ALPHA_TAKE: [2-4 sentences interpreting what the metric signals about sentiment, positioning, liquidity preference, participation, or risk appetite. Emphasize second-order effects like leverage behavior, capital concentration. If relevant, mention what would need to change for the takeaway to shift. NO calls to action, NO strategy language.]
+INDICATOR_LINE: [One short factual line: "Fear & Greed Index at [X]"]
 
-CONTEXT_TAG: [ONE of: Risk-off environment | Selective risk-on | High uncertainty phase | Defensive positioning | Crowded longs | Short-term cautious | Volatile range | Near-term volatility]
+ALPHA_TAKE: [Exactly ONE sentence. Answer: "What does this signal imply about market behavior right now?" Must interpret (not describe), explain why this matters NOW, reflect behavioral/positioning/liquidity/regime implications. Focus on: Flow & Positioning type - risk appetite shifts, de-risking vs re-leveraging, capital concentration, leverage behavior, participation patterns. Use probabilistic language: "historically," "tends to," "often coincides," "may indicate." NO predictions, NO advice, NO bullish/bearish labels.]
 
-HASHTAGS: [Generate 3 relevant, contextual hashtags based on the current market state. Use professional vocabulary. Format: #Tag1 #Tag2 #Tag3]
+CONTEXT_TAG: [ONE category, 2-4 words, NO emojis. Categories: Risk Regime (Risk-off environment | Fragile risk-on | Liquidity-driven regime | High uncertainty phase) | Market Regime (Volatile range | Compression phase | Trend transition phase | Momentum exhaustion) | Time Horizon (Near-term volatility | Short-term cautious | Medium-term constructive) | Positioning Bias (Defensive positioning | Crowded longs | Light exposure | De-risked market)]
 
-TONE: Analytical, neutral, institutional. Think: sell-side market note, not social media commentary. Data > emotion. Clarity > confidence.
+HASHTAGS: [Exactly 3 unique, relevant hashtags based on current market context]
 
-DO NOT:
-- Repeat the metric mechanically
-- Predict price direction
-- Use absolutes or certainty
-- Add strategy or execution hints ("accumulate," "wait," "buy dips")
-
-QUALITY CHECK:
-- Does this add interpretation, not description?
-- Does it help the reader orient within the current market regime?
-- Does it avoid implying a trade, bias, or directional view?
+QUALITY CHECK: Does this reduce noise? Does this explain behavior, not the indicator? Would this appear in a hedge fund morning note?
 
 EXAMPLE:
-ALPHA_TAKE: Prolonged fear readings typically coincide with reduced leverage, lower participation, and capital preservation behavior. Historically, such conditions compress volatility over time unless disrupted by macro or liquidity shocks. A sustained shift in derivatives activity or ETF flows would be required to meaningfully alter this sentiment backdrop.
+INDICATOR_LINE: Fear & Greed Index at 26 (Extreme Fear)
+ALPHA_TAKE: Prolonged fear readings historically coincide with reduced leverage and capital preservation behavior, conditions that tend to compress volatility unless disrupted by macro shocks or sustained shifts in derivatives activity and institutional flows.
 CONTEXT_TAG: Defensive positioning
-HASHTAGS: #CapitalPreservation #LowLeverage #FearZone
+HASHTAGS: #CapitalPreservation #LowLeverage #VolatilityCompression
 """,
     
-    "altcoin_season": """ROLE: You are a professional crypto market analyst writing for a US-based, high-signal audience.
+    "altcoin_season": """ROLE: You are an institutional-grade crypto research assistant writing for US-based, market-literate crypto investors.
 
 INPUT: Altcoin Season Index screenshot
 
-TASK: Interpret the visual indicator and extract a concise Alpha Take about capital rotation and market structure. Assume the reader has already seen the screenshot.
+TASK: Interpret this visual market indicator and extract ONE high-signal Alpha Take sentence about capital rotation and market structure. You do NOT summarize. You do NOT repeat the metric. You do NOT give trading advice.
 
-OUTPUT REQUIREMENTS:
-- Clear, professional American English
-- NO price targets, NO financial advice, NO bullish/bearish language
-- Focus on capital flows, participation patterns, and regime shifts
-- Use probabilistic language: "historically," "tends to," "often coincides," "may indicate"
+Your value comes from contextual interpretation of:
+- Attention vs capital flows
+- Narrative crowding or rotation
+- Risk appetite shifts
+- Participation patterns
 
-OUTPUT FORMAT (MANDATORY):
+ASSUME: Reader has already seen the screenshot.
 
-ALPHA_TAKE: [2-4 sentences explaining what the index reading means for market rotation, risk appetite, and capital distribution. Focus on second-order effects like altcoin suppression, Bitcoin concentration. Mention conditions that would shift this regime.]
+OUTPUT STRUCTURE (MANDATORY):
 
-CONTEXT_TAG: [ONE of: Risk-off environment | Selective risk-on | Bitcoin-led regime | Altcoin expansion phase | Defensive positioning | Fragile risk-on | Short-term cautious]
+INDICATOR_LINE: [One short factual line: "Altcoin Season Index at [X]"]
 
-HASHTAGS: [Generate 3 relevant hashtags based on current rotation dynamics. Format: #Tag1 #Tag2 #Tag3]
+ALPHA_TAKE: [Exactly ONE sentence. Focus on: Narrative & Attention type - attention rotation, capital flow patterns, narrative crowding vs early themes, consensus formation or fatigue, sector participation dynamics. Explain what this implies about where capital and attention are concentrating or rotating. Use probabilistic language. NO predictions, NO advice.]
+
+CONTEXT_TAG: [ONE category, 2-4 words, NO emojis. Categories: Risk Regime (Risk-off environment | Fragile risk-on | Liquidity-driven regime) | Market Regime (Volatile range | Compression phase | Trend transition) | Time Horizon (Near-term volatility | Short-term cautious) | Positioning Bias (Defensive positioning | Crowded longs | Light exposure)]
+
+HASHTAGS: [Exactly 3 unique, relevant hashtags]
+
+QUALITY CHECK: Does this explain capital behavior, not just the index reading?
 
 EXAMPLE:
-ALPHA_TAKE: Readings below 25 indicate capital is rotating into Bitcoin, often reflecting risk-off sentiment within crypto. Historically, sustained Bitcoin dominance has preceded either broader market weakness or accumulation phases before the next alt cycle. This pattern tends to persist until macro clarity improves or BTC establishes a clearer directional trend.
-CONTEXT_TAG: Risk-off environment
-HASHTAGS: #BitcoinDominance #AltcoinSuppression #CapitalRotation
+INDICATOR_LINE: Altcoin Season Index at 32 (Bitcoin Season)
+ALPHA_TAKE: Sustained BTC dominance in this reading historically reflects capital concentration in perceived safety assets, a pattern that tends to suppress broad altcoin participation until either risk appetite expands or narrative-driven catalysts shift attention to specific sectors.
+CONTEXT_TAG: Defensive positioning
+HASHTAGS: #BTCDominance #AltcoinWeakness #RiskOff
 """,
     
-    "btc_dominance": """ROLE: You are a professional crypto market analyst writing for a US-based, high-signal audience.
+    "btc_dominance": """ROLE: You are an institutional-grade crypto research assistant writing for US-based, market-literate crypto investors.
 
 INPUT: Bitcoin Dominance screenshot
 
-TASK: Interpret dominance levels and what they signal about market structure and capital distribution. Assume the reader has already seen the screenshot.
+TASK: Interpret this metric and extract ONE high-signal Alpha Take sentence about market structure and capital distribution. You do NOT summarize. You do NOT repeat the metric.
 
-OUTPUT REQUIREMENTS:
-- Clear, professional American English
-- NO price targets, NO financial advice, NO bullish/bearish language
-- Focus on capital rotation, risk distribution, and market structure
-- Use probabilistic language
+Your value comes from explaining what dominance implies about:
+- Capital concentration vs rotation
+- Risk appetite and altcoin participation
+- Market structure shifts
 
-OUTPUT FORMAT (MANDATORY):
+ASSUME: Reader has already seen the screenshot.
 
-ALPHA_TAKE: [2-4 sentences explaining what current dominance means for market structure, capital flows, and risk appetite. Emphasize second-order effects like altcoin participation, leverage distribution. Mention what would shift this dynamic.]
+OUTPUT STRUCTURE (MANDATORY):
 
-CONTEXT_TAG: [ONE of: Risk-off environment | Selective risk-on | Defensive positioning | Bitcoin-led regime | Trend transition phase | De-risked market]
+INDICATOR_LINE: [One short factual line: "Bitcoin Dominance at [X]%"]
 
-HASHTAGS: [Generate 3 relevant hashtags based on dominance level and market structure. Format: #Tag1 #Tag2 #Tag3]
+ALPHA_TAKE: [Exactly ONE sentence. Focus on: Flow & Positioning type - capital concentration, altcoin suppression or expansion, risk distribution, leverage patterns, participation dynamics. Explain what this level means for market structure. Use probabilistic language. NO predictions, NO advice.]
+
+CONTEXT_TAG: [ONE category, 2-4 words, NO emojis]
+
+HASHTAGS: [Exactly 3 unique, relevant hashtags]
 
 EXAMPLE:
-ALPHA_TAKE: Bitcoin dominance near 60% typically signals risk-off behavior within crypto, with capital flowing into the perceived safety of BTC. This environment often persists until macro clarity improves or BTC itself establishes a clearer trend. Meaningful rotation back to alts would require both stable BTC price action and improved risk appetite indicators.
-CONTEXT_TAG: Risk-off environment
-HASHTAGS: #BTCDominance #SafeHaven #RiskOff
+INDICATOR_LINE: Bitcoin Dominance at 58%
+ALPHA_TAKE: Dominance at this level historically coincides with capital rotating away from altcoins into perceived safety, a structural shift that tends to suppress broad-based participation and concentrate liquidity until either macro conditions improve or BTC establishes clear directional momentum.
+CONTEXT_TAG: Defensive positioning
+HASHTAGS: #BTCDominance #AltcoinWeakness #CapitalConcentration
 """,
-    
-    "eth_etf": """ROLE: You are a professional crypto market analyst writing for a US-based, high-signal audience.
+    "eth_etf": """ROLE: You are an institutional-grade crypto research assistant writing for US-based, market-literate crypto investors.
 
-INPUT: Ethereum ETF flows screenshot
+INPUT: Ethereum ETF Tracker screenshot
 
-TASK: Interpret flow patterns and what they signal about institutional demand dynamics. Assume the reader has already seen the screenshot.
+TASK: Interpret this flow data and extract ONE high-signal Alpha Take sentence about institutional demand and market dynamics. You do NOT summarize flows. You do NOT repeat numbers.
 
-OUTPUT REQUIREMENTS:
-- Clear, professional American English
-- NO price targets, NO financial advice, NO bullish/bearish language
-- Focus on flow trends, institutional behavior, and demand sustainability
-- Use probabilistic language
+Your value comes from explaining what these flows imply about:
+- Institutional positioning
+- Demand sustainability
+- Risk appetite
+- Market structure
 
-OUTPUT FORMAT (MANDATORY):
+ASSUME: Reader has already seen the screenshot.
 
-ALPHA_TAKE: [2-4 sentences explaining what the flow patterns indicate about institutional appetite, demand sustainability, and positioning. Emphasize second-order effects like liquidity conditions, structural demand. Mention what would invalidate this reading.]
+OUTPUT STRUCTURE (MANDATORY):
 
-CONTEXT_TAG: [ONE of: Light exposure | Cautious institutions | Flow reversal phase | Demand compression | Medium-term constructive | Short-term cautious]
+INDICATOR_LINE: [One short factual line: "ETH ETF flows: [net inflow/outflow of $X]" or "ETH ETF AUM: $X"]
 
-HASHTAGS: [Generate 3 relevant hashtags based on ETF flow dynamics. Format: #Tag1 #Tag2 #Tag3]
+ALPHA_TAKE: [Exactly ONE sentence. Focus on: Flow & Positioning type - institutional demand patterns, flow sustainability, positioning shifts, risk appetite indicators, comparative dynamics vs BTC ETFs. Explain what current flows signal about broader market behavior. Use probabilistic language. NO predictions, NO advice.]
+
+CONTEXT_TAG: [ONE category, 2-4 words, NO emojis]
+
+HASHTAGS: [Exactly 3 unique, relevant hashtags]
 
 EXAMPLE:
-ALPHA_TAKE: Mixed daily flows with negative monthly performance suggest institutions remain cautious on ETH exposure. This consolidation pattern often precedes either a catalyst-driven shift or extended sideways action until fundamentals re-rate. Sustained positive weekly flows would be needed to signal a meaningful change in institutional positioning.
-CONTEXT_TAG: Short-term cautious
-HASHTAGS: #ETHFlows #InstitutionalCaution #DemandConsolidation
+INDICATOR_LINE: ETH ETF net outflow: -$45M
+ALPHA_TAKE: Sustained outflows at this pace often reflect either profit-taking after rallies or reduced conviction in ETH's near-term risk/reward, a pattern that historically coincides with capital rotating toward BTC or defensive positioning across crypto-native investors.
+CONTEXT_TAG: Defensive positioning
+HASHTAGS: #ETHETFs #InstitutionalFlows #RiskRotation
 """,
-    
-    "btc_etf": """ROLE: You are a professional crypto market analyst writing for a US-based, high-signal audience.
+    "btc_etf": """ROLE: You are an institutional-grade crypto research assistant writing for US-based, market-literate crypto investors.
 
-INPUT: Bitcoin ETF flows screenshot
+INPUT: Bitcoin ETF Tracker screenshot
 
-TASK: Interpret flow trends and what they reveal about institutional demand and market positioning. Assume the reader has already seen the screenshot.
+TASK: Interpret this flow data and extract ONE high-signal Alpha Take sentence about institutional demand. You do NOT summarize flows. You do NOT repeat numbers.
 
-OUTPUT REQUIREMENTS:
-- Clear, professional American English
-- NO price targets, NO financial advice, NO bullish/bearish language
-- Focus on demand dynamics, flow sustainability, and institutional behavior
-- Use probabilistic language
+Your value comes from explaining what these flows imply about:
+- Institutional positioning
+- Demand sustainability  
+- Risk appetite
+- Market regime
 
-OUTPUT FORMAT (MANDATORY):
+ASSUME: Reader has already seen the screenshot.
 
-ALPHA_TAKE: [2-4 sentences explaining what flow patterns signal about institutional appetite and demand sustainability. Emphasize liquidity conditions, structural vs tactical demand. Mention reversal conditions.]
+OUTPUT STRUCTURE (MANDATORY):
 
-CONTEXT_TAG: [ONE of: Renewed demand | Flow reversal | Cautious institutions | Medium-term constructive | Compression phase | Light exposure]
+INDICATOR_LINE: [One short factual line: "BTC ETF flows: [net inflow/outflow of $X]" or "BTC ETF AUM: $X"]
 
-HASHTAGS: [Generate 3 relevant hashtags based on BTC ETF flow trends. Format: #Tag1 #Tag2 #Tag3]
+ALPHA_TAKE: [Exactly ONE sentence. Focus on: Flow & Positioning type - institutional demand patterns, flow sustainability, positioning shifts, risk appetite signals, absorption capacity. Explain what current flows signal about market behavior. Use probabilistic language. NO predictions, NO advice.]
+
+CONTEXT_TAG: [ONE category, 2-4 words, NO emojis]
+
+HASHTAGS: [Exactly 3 unique, relevant hashtags]
 
 EXAMPLE:
-ALPHA_TAKE: Sustained positive inflows after a period of outflows typically signal renewed institutional interest, though the magnitude matters more than direction alone. If this trend continues alongside improving macro conditions, it could support a more constructive setup. Reversal back to consistent outflows would invalidate this tentative shift in institutional sentiment.
-CONTEXT_TAG: Renewed demand
-HASHTAGS: #BTCFlows #InstitutionalDemand #FlowReversal
+INDICATOR_LINE: BTC ETF net inflow: +$120M
+ALPHA_TAKE: Consistent inflows above $100M historically signal sustained institutional demand, a flow pattern that tends to provide price support and absorb supply pressure unless disrupted by macro deterioration or profit-taking cascades.
+CONTEXT_TAG: Fragile risk-on
+HASHTAGS: #BTCETFs #InstitutionalDemand #FlowSupport
 """,
-    
-    "top_gainers": """ROLE: You are a professional crypto market analyst writing for a US-based, high-signal audience.
+    "top_gainers": """ROLE: You are an institutional-grade crypto research assistant writing for US-based, market-literate crypto investors.
 
-INPUT: Top Gainers screenshot
+INPUT: Top Gainers Today screenshot
 
-TASK: Interpret which tokens are gaining and what this reveals about market themes, rotation, and participation patterns. Assume the reader has already seen the screenshot.
+TASK: Interpret this performance data and extract ONE high-signal Alpha Take sentence about sector rotation and narrative dynamics. You do NOT list coins. You do NOT repeat prices.
 
-OUTPUT REQUIREMENTS:
-- Clear, professional American English
-- NO price targets, NO financial advice, NO bullish/bearish language
-- Focus on rotation patterns, sector strength, and participation breadth
-- Use probabilistic language
+Your value comes from explaining what these gainers imply about:
+- Sector rotation and attention flows
+- Narrative momentum
+- Risk appetite
+- Market structure
 
-OUTPUT FORMAT (MANDATORY):
+ASSUME: Reader has already seen the screenshot.
 
-ALPHA_TAKE: [2-4 sentences explaining what the gaining tokens reveal about market themes, capital rotation, and risk appetite. Emphasize narrative strength, speculation vs fundamentals, participation breadth. Mention what would signal a regime shift.]
+OUTPUT STRUCTURE (MANDATORY):
 
-CONTEXT_TAG: [ONE of: Selective risk-on | Narrative rotation | Speculation phase | Broad participation | Fragile risk-on | High uncertainty phase]
+INDICATOR_LINE: [One short factual line: "Top gainers led by [sector/theme]: [examples]"]
 
-HASHTAGS: [Generate 3 relevant hashtags based on which sectors/narratives are gaining. Format: #Tag1 #Tag2 #Tag3]
+ALPHA_TAKE: [Exactly ONE sentence. Focus on: Narrative & Attention type - sector rotation, attention vs capital dynamics, narrative crowding vs early themes, consensus formation. Explain what this performance pattern signals about market behavior. Use probabilistic language. NO predictions, NO advice.]
+
+CONTEXT_TAG: [ONE category, 2-4 words, NO emojis]
+
+HASHTAGS: [Exactly 3 unique, relevant hashtags]
 
 EXAMPLE:
-ALPHA_TAKE: Multiple double-digit gainers across infrastructure tokens suggest rotation into fundamental-driven narratives rather than pure speculation. This pattern often emerges when risk appetite is improving but not yet fully extended, favoring selective positioning over broad exposure. A shift to meme or low-cap dominance would signal different market dynamics.
-CONTEXT_TAG: Selective risk-on
+INDICATOR_LINE: Top gainers led by infrastructure tokens: RNDR, FIL, AR
+ALPHA_TAKE: Infrastructure-focused outperformance typically reflects narrative rotation toward supply-side themes, a pattern that historically signals either early-stage attention capture or late-cycle sector rotation as broader momentum fades.
+CONTEXT_TAG: Trend transition phase
 HASHTAGS: #InfrastructurePlay #NarrativeRotation #SelectiveRisk
 """,
-    
-    "token_unlocks": """ROLE: You are a professional crypto market analyst writing for a US-based, high-signal audience.
+    "token_unlocks": """ROLE: You are an institutional-grade crypto research assistant writing for US-based, market-literate crypto investors.
 
-INPUT: Token Unlocks screenshot
+INPUT: Token Unlocks Next 7 Days screenshot
 
-TASK: Interpret upcoming unlocks and their potential impact on supply dynamics and market positioning. Assume the reader has already seen the screenshot.
+TASK: Interpret this supply schedule and extract ONE high-signal Alpha Take sentence about structural pressure and market dynamics. You do NOT list tokens. You do NOT repeat unlock amounts.
 
-OUTPUT REQUIREMENTS:
-- Clear, professional American English
-- NO price targets, NO financial advice, NO bullish/bearish language
-- Focus on supply pressure, market absorption capacity, and positioning effects
-- Use probabilistic language
+Your value comes from explaining what these unlocks imply about:
+- Supply pressure and absorption capacity
+- Vesting constraints
+- Market positioning
+- Liquidity dynamics
 
-OUTPUT FORMAT (MANDATORY):
+ASSUME: Reader has already seen the screenshot.
 
-ALPHA_TAKE: [2-4 sentences explaining the potential impact of upcoming unlocks on supply dynamics and market behavior. Emphasize absorption capacity, frontrunning behavior, holder incentives. Mention key variables that matter.]
+OUTPUT STRUCTURE (MANDATORY):
 
-CONTEXT_TAG: [ONE of: Supply pressure | Well-telegraphed event | Frontrun positioning | Manageable unlock | High uncertainty phase | Near-term volatility]
+INDICATOR_LINE: [One short factual line: "Major unlocks: [token names], total $[X]M"]
 
-HASHTAGS: [Generate 3 relevant hashtags based on unlock size and market impact. Format: #Tag1 #Tag2 #Tag3]
+ALPHA_TAKE: [Exactly ONE sentence. Focus on: Structural / Macro type - supply pressure, vesting schedules, absorption capacity, positioning adjustments, structural constraints. Explain what upcoming unlocks signal for market behavior. Use probabilistic language. NO predictions, NO advice.]
+
+CONTEXT_TAG: [ONE category, 2-4 words, NO emojis]
+
+HASHTAGS: [Exactly 3 unique, relevant hashtags]
 
 EXAMPLE:
-ALPHA_TAKE: Upcoming cliff unlocks totaling $98M are significant but manageable given current market depth. Historically, well-telegraphed unlocks see selling pressure frontrun, with actual unlock dates often marking local lows if broader market conditions hold. The key variable is whether holders choose immediate liquidity or structured distribution.
-CONTEXT_TAG: Well-telegraphed event
-HASHTAGS: #TokenUnlocks #SupplyPressure #VestingSchedule
+INDICATOR_LINE: Major unlocks: APT, ARB, OP, total $180M
+ALPHA_TAKE: Clustered unlocks of this magnitude often create localized selling pressure and positioning adjustments, structural headwinds that historically compress price action unless offset by strong demand catalysts or narrative momentum.
+CONTEXT_TAG: Near-term volatility
+HASHTAGS: #TokenUnlocks #SupplyPressure #StructuralHeadwinds
 """,
-    
     "heatmap": """ROLE: You are a professional crypto market analyst writing for a US-based, high-signal audience.
 
 INPUT: Crypto Market Heatmap screenshot
@@ -325,14 +341,17 @@ def get_ai_comment(source_key, image_path):
         content = response.choices[0].message.content.strip()
         logger.info(f"  OpenAI response: {content}")
         
-        # Извлекаем ALPHA_TAKE, CONTEXT_TAG и HASHTAGS
+        # Извлекаем INDICATOR_LINE, ALPHA_TAKE, CONTEXT_TAG и HASHTAGS
+        indicator_line = None
         alpha_take = None
         context_tag = None
         hashtags = None
         
         for line in content.split('\n'):
             line = line.strip()
-            if line.startswith('ALPHA_TAKE:'):
+            if line.startswith('INDICATOR_LINE:'):
+                indicator_line = line.replace('INDICATOR_LINE:', '').strip()
+            elif line.startswith('ALPHA_TAKE:'):
                 alpha_take = line.replace('ALPHA_TAKE:', '').strip()
             elif line.startswith('CONTEXT_TAG:'):
                 context_tag = line.replace('CONTEXT_TAG:', '').strip()
@@ -346,6 +365,8 @@ def get_ai_comment(source_key, image_path):
             # Fallback: используем весь ответ если нет маркера
             alpha_take = content
         
+        if indicator_line:
+            logger.info(f"  ✓ Indicator Line: {indicator_line}")
         logger.info(f"  ✓ Alpha Take: {alpha_take}")
         if context_tag:
             logger.info(f"  ✓ Context Tag: {context_tag}")
@@ -353,9 +374,10 @@ def get_ai_comment(source_key, image_path):
             logger.info(f"  ✓ Hashtags: {hashtags}")
         
         return {
+            "indicator_line": indicator_line,  # NEW!
             "alpha_take": alpha_take,
-            "context_tag": context_tag,  # Может быть None
-            "hashtags": hashtags  # Может быть None (NEW!)
+            "context_tag": context_tag,
+            "hashtags": hashtags
         }
         
     except Exception as e:
@@ -371,6 +393,7 @@ def add_alpha_take_to_caption(title, hashtags_fallback, ai_result):
     
     Format:
     <title>
+    <indicator_line> (if present)
     
     Alpha Take
     <alpha_take text>
@@ -382,7 +405,7 @@ def add_alpha_take_to_caption(title, hashtags_fallback, ai_result):
     Args:
         title: Заголовок поста
         hashtags_fallback: Хештеги fallback (если AI не сгенерировал)
-        ai_result: Результат от get_ai_comment() - {"alpha_take": "...", "context_tag": "...", "hashtags": "..."}
+        ai_result: Результат от get_ai_comment() - {"indicator_line": "...", "alpha_take": "...", "context_tag": "...", "hashtags": "..."}
         
     Returns:
         str: Caption с Alpha Take
@@ -391,16 +414,22 @@ def add_alpha_take_to_caption(title, hashtags_fallback, ai_result):
         # Без AI - старый формат (title + hashtags)
         return f"<b>{title}</b>\n\n{hashtags_fallback}"
     
+    indicator_line = ai_result.get('indicator_line')  # NEW!
     alpha_take = ai_result['alpha_take']
-    context_tag = ai_result.get('context_tag')  # Может быть None
-    hashtags_ai = ai_result.get('hashtags')  # Может быть None (NEW!)
+    context_tag = ai_result.get('context_tag')
+    hashtags_ai = ai_result.get('hashtags')
     
     # Используем AI хештеги если есть, иначе fallback
     hashtags = hashtags_ai if hashtags_ai else hashtags_fallback
     
-    # Новый формат: Title -> Alpha Take -> Alpha take text -> Context Tag (if exists) -> Hashtags
-    caption = f"<b>{title}</b>\n\n"
-    caption += f"<b>Alpha Take</b>\n"
+    # Новый формат: Title -> Indicator Line -> Alpha Take -> Context Tag -> Hashtags
+    caption = f"<b>{title}</b>\n"
+    
+    # Добавляем indicator line если есть
+    if indicator_line:
+        caption += f"{indicator_line}\n"
+    
+    caption += f"\n<b>◼ Alpha Take</b>\n"
     caption += f"{alpha_take}\n\n"
     
     # Добавляем Context Tag если есть
