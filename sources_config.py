@@ -135,15 +135,16 @@ SCREENSHOT_SOURCES = {
     "heatmap": {
         "name": "Crypto Market Heatmap",
         "url": "https://coincodex.com/heatmap/",
-        "selector": "div[id^='ccx-heat-map-container']",  # ✅ Точный селектор для контейнера
-        "wait_for": "canvas",  # Ждем canvas элемент (heatmap рисуется на canvas)
+        "selector": "div[id^='ccx-heat-map-container']",
+        "wait_for": "canvas",
         "telegram_title": "🗺️ Crypto Market Heatmap",
         "telegram_hashtags": "#Heatmap #MarketBreadth #Crypto",
-        "enabled": True,  # ✅ ВКЛЮЧЕН
+        "enabled": True,
         "priority": 8,
-        "extra_wait": 5,  # Дополнительно 5 секунд для полной загрузки amCharts
-        "viewport_width": 1920,  # Широкий viewport для детализации
-        "viewport_height": 1080
+        "extra_wait": 5,
+        "viewport_width": 1920,
+        "viewport_height": 1080,
+        "crop": {"top": 0, "right": 0, "bottom": 60, "left": 0}
     }
 }
 
@@ -193,34 +194,39 @@ SCREENSHOT_SOURCES = {
 
 POST_SCHEDULE = {
     "market_breadth_morning": {
-        "time_range_msk": (10.0, 10.5),  # 10:00-10:30 MSK (30 минут)
+        "time_range_msk": (7.0, 7.5),
         "sources": ["heatmap"],
-        "selection": "fixed"  # Фиксированный источник
+        "selection": "fixed"
     },
     "daily_market_sentiment": {
-        "time_range_msk": (16.5, 17.0),  # 16:30-17:00 MSK (30 минут)
+        "time_range_msk": (16.5, 17.0),
         "sources": ["fear_greed", "altcoin_season", "btc_dominance"],
-        "selection": "random"  # Случайный выбор
+        "selection": "random"
     },
     "token_unlocks_watch": {
-        "time_range_msk": (18.5, 19.0),  # 18:30-19:00 MSK (30 минут)
+        "time_range_msk": (18.5, 19.0),
         "sources": ["token_unlocks"],
-        "selection": "fixed"  # Фиксированный источник
+        "selection": "fixed"
+    },
+    "market_breadth_evening": {
+        "time_range_msk": (19.0, 19.5),
+        "sources": ["heatmap"],
+        "selection": "fixed"
     },
     "btc_etf_flows": {
-        "time_range_msk": (20.0, 20.5),  # 20:00-20:30 MSK (30 минут) ✅ НОВОЕ!
+        "time_range_msk": (20.0, 20.5),
         "sources": ["btc_etf"],
-        "selection": "fixed"  # BTC ETF каждый день
+        "selection": "fixed"
     },
     "eth_etf_flows": {
-        "time_range_msk": (20.5, 21.0),  # 20:30-21:00 MSK (30 минут) ✅ НОВОЕ!
+        "time_range_msk": (20.5, 21.0),
         "sources": ["eth_etf"],
-        "selection": "fixed"  # ETH ETF каждый день
+        "selection": "fixed"
     },
     "top_gainers_radar": {
-        "time_range_msk": (22.0, 22.5),  # 22:00-22:30 MSK (30 минут)
+        "time_range_msk": (22.0, 22.5),
         "sources": ["top_gainers"],
-        "selection": "fixed"  # Фиксированный источник
+        "selection": "fixed"
     }
 }
 
