@@ -1,6 +1,6 @@
 {
   "last_published": {
-    "token_unlocks": "2025-12-31T15:50:32.775918+00:00",
+    "token_unlocks": "2026-01-01T15:50:40.507024+00:00",
     "altcoin_season": "2025-12-31T13:34:53.615605+00:00",
     "derivatives": "2025-12-10T12:58:24.353929+00:00",
     "eth_etf": "2025-12-31T17:48:32.372101+00:00",
@@ -11,10 +11,10 @@
     "heatmap": "2025-12-31T16:29:58.206504+00:00"
   },
   "last_publication": {
-    "source": "btc_dominance",
-    "name": "Bitcoin Dominance",
-    "published_at": "2026-01-01T13:35:20.132999+00:00",
-    "hour_utc": 13,
+    "source": "token_unlocks",
+    "name": "Token Unlocks Next 7 Days",
+    "published_at": "2026-01-01T15:50:40.507040+00:00",
+    "hour_utc": 15,
     "telegram": true,
     "twitter": false
   }
