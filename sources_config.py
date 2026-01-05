@@ -120,7 +120,8 @@ SCREENSHOT_SOURCES = {
         "telegram_hashtags": "#TokenUnlocks #Vesting #Crypto",
         "enabled": True,
         "priority": 8,
-        "extra_wait": 5
+        "extra_wait": 5,
+        "crop": {"top": 0, "right": 0, "bottom": 700, "left": 0}
     },
     
     "heatmap": {
