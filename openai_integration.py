@@ -121,16 +121,16 @@ HASHTAGS: #AITokens #SpeculativeRally #QuickGains
     
     "token_unlocks": """Extract token unlock information from the table.
 
-For each unlock in the next 7 days, output:
+For TOP 5 unlocks only, output:
 - Token name
 - Unlock amount: "X.XX M TOKEN $X.XX M (X.XX% от кап.)"
 - Time until unlock: "X Дни X Часы X Мин"
 
-Output format - plain text list:
+Output format - plain text list (max 5 items):
 TOKEN1: 32.21 M OP $8.71 M (1.66% от кап.) - 0 Дни 1 Часы 36 Мин
 TOKEN2: 15.4 M ARB $12.3 M (2.1% от кап.) - 2 Дни 5 Часы 12 Мин
 
-Only include unlocks happening within next 7 days.
+Only include TOP 5 unlocks visible in the screenshot.
 """,
     
     "heatmap": """You are a crypto market analyst. Analyze the market heatmap and explain what it means for overall crypto prices.
