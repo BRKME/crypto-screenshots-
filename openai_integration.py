@@ -119,20 +119,6 @@ CONTEXT_TAG: Moderate hype
 HASHTAGS: #AITokens #SpeculativeRally #QuickGains
 """,
     
-    "token_unlocks": """Extract token unlock information from the table.
-
-For TOP 5 unlocks only, output:
-- Token name
-- Unlock amount: "X.XX M TOKEN $X.XX M (X.XX% от кап.)"
-- Time until unlock: "X Дни X Часы X Мин"
-
-Output format - plain text list (max 5 items):
-TOKEN1: 32.21 M OP $8.71 M (1.66% от кап.) - 0 Дни 1 Часы 36 Мин
-TOKEN2: 15.4 M ARB $12.3 M (2.1% от кап.) - 2 Дни 5 Часы 12 Мин
-
-Only include TOP 5 unlocks visible in the screenshot.
-""",
-    
     "heatmap": """You are a crypto market analyst. Analyze the market heatmap and explain what it means for overall crypto prices.
 
 OUTPUT FORMAT:
@@ -190,9 +176,6 @@ def get_ai_comment(source_key, image_path):
         
         logger.info(f"🤖 Requesting Alpha Take from OpenAI for {source_key}...")
         
-        # Динамический max_tokens в зависимости от источника
-        max_tokens = 500 if source_key == "token_unlocks" else 200
-        
         # Вызываем OpenAI API
         response = client.chat.completions.create(
             model="gpt-4o-mini",
@@ -213,20 +196,13 @@ def get_ai_comment(source_key, image_path):
                     ]
                 }
             ],
-            max_tokens=max_tokens,
+            max_tokens=200,
             temperature=0.7
         )
         
         # Парсим ответ
         content = response.choices[0].message.content.strip()
         logger.info(f"  OpenAI response: {content}")
-        
-        # Специальная обработка для token_unlocks - просто текст
-        if source_key == "token_unlocks":
-            return {
-                "text_only": True,
-                "content": content
-            }
         
         # Извлекаем INDICATOR_LINE, ALPHA_TAKE, CONTEXT_TAG и HASHTAGS
         indicator_line = None
@@ -301,12 +277,7 @@ def add_alpha_take_to_caption(title, hashtags_fallback, ai_result):
         # Без AI - старый формат (title + hashtags)
         return f"<b>{title}</b>\n\n{hashtags_fallback}"
     
-    # Специальная обработка для text_only (token_unlocks)
-    if ai_result.get('text_only'):
-        content = ai_result['content']
-        return f"<b>{title}</b>\n\n{content}\n\n{hashtags_fallback}"
-    
-    indicator_line = ai_result.get('indicator_line')  # NEW!
+    indicator_line = ai_result.get('indicator_line')
     alpha_take = ai_result['alpha_take']
     context_tag = ai_result.get('context_tag')
     hashtags_ai = ai_result.get('hashtags')
