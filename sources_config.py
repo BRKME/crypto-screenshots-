@@ -56,33 +56,33 @@ SCREENSHOT_SOURCES = {
     "eth_etf": {
         "name": "Ethereum ETF Tracker",
         "url": "https://coinmarketcap.com/etf/ethereum/",
-        "selector": "[data-role='content-wrapper']",  # ✅ Селектор с 3 карточками
+        "selector": "[data-role='content-wrapper']",
         "wait_for": "[data-role='content-wrapper']",
         "telegram_title": "💎 Ethereum ETF Tracker",
         "telegram_hashtags": "#Ethereum #ETF #ETH",
         "enabled": True,
         "priority": 4,
-        "skip_width_padding": True,  # ✅ БЕЗ огромных полей
-        "element_padding": {"top": 60, "right": 40, "bottom": 60, "left": 40},  # Небольшие отступы
-        "scale": 1.0,  # ✅ Без увеличения (карточки нормального размера)
-        "crop": {"top": 50, "right": 30, "bottom": 0, "left": 0},  # ✅ Обрезка сверху и справа
-        "extra_wait": 10  # ✅ НОВОЕ: 10 секунд для загрузки свежих данных
+        "skip_width_padding": True,
+        "element_padding": {"top": 60, "right": 40, "bottom": 60, "left": 40},
+        "scale": 1.0,
+        "crop": {"top": 50, "right": 30, "bottom": 150, "left": 0},
+        "extra_wait": 10
     },
     
     "btc_etf": {
         "name": "Bitcoin ETF Tracker",
         "url": "https://coinmarketcap.com/etf/bitcoin/",
-        "selector": "[data-role='content-wrapper']",  # ✅ Селектор с 3 карточками
+        "selector": "[data-role='content-wrapper']",
         "wait_for": "[data-role='content-wrapper']",
         "telegram_title": "₿ Bitcoin ETF Tracker",
         "telegram_hashtags": "#Bitcoin #ETF #BTC",
         "enabled": True,
         "priority": 5,
-        "skip_width_padding": True,  # ✅ БЕЗ огромных полей
-        "element_padding": {"top": 60, "right": 40, "bottom": 60, "left": 40},  # Небольшие отступы
-        "scale": 1.0,  # ✅ Без увеличения (карточки нормального размера)
-        "crop": {"top": 50, "right": 30, "bottom": 0, "left": 0},  # ✅ Обрезка сверху и справа
-        "extra_wait": 10  # ✅ НОВОЕ: 10 секунд для загрузки свежих данных
+        "skip_width_padding": True,
+        "element_padding": {"top": 60, "right": 40, "bottom": 60, "left": 40},
+        "scale": 1.0,
+        "crop": {"top": 50, "right": 30, "bottom": 150, "left": 0},
+        "extra_wait": 10
     },
     
     "derivatives": {
@@ -113,7 +113,7 @@ SCREENSHOT_SOURCES = {
     
     "token_unlocks": {
         "name": "Token Unlocks Next 7 Days",
-        "url": "https://dropstab.com/ru/vesting",
+        "url": "https://dropstab.com/vesting",
         "selector": "table",
         "wait_for": "table",
         "telegram_title": "🔓 Token Unlocks Next 7 Days",
@@ -121,22 +121,22 @@ SCREENSHOT_SOURCES = {
         "enabled": True,
         "priority": 8,
         "extra_wait": 5,
-        "crop": {"top": 0, "right": 0, "bottom": 700, "left": 0}
+        "crop": {"top": 0, "right": 0, "bottom": 700, "left": 0},
+        "skip_ai": True
     },
     
     "heatmap": {
         "name": "Crypto Market Heatmap",
         "url": "https://coincodex.com/heatmap/",
-        "selector": "div[id^='ccx-heat-map-container']",
+        "selector": "canvas",
         "wait_for": "canvas",
         "telegram_title": "🗺️ Crypto Market Heatmap",
         "telegram_hashtags": "#Heatmap #MarketBreadth #Crypto",
         "enabled": True,
         "priority": 8,
-        "extra_wait": 5,
+        "extra_wait": 8,
         "viewport_width": 1920,
-        "viewport_height": 1080,
-        "crop": {"top": 0, "right": 0, "bottom": 60, "left": 0}
+        "viewport_height": 1080
     }
 }
 
@@ -186,7 +186,7 @@ SCREENSHOT_SOURCES = {
 
 POST_SCHEDULE = {
     "market_breadth_morning": {
-        "time_range_msk": (7.0, 7.5),
+        "time_range_msk": (7.0, 7.83),
         "sources": ["heatmap"],
         "selection": "fixed"
     },
@@ -196,12 +196,12 @@ POST_SCHEDULE = {
         "selection": "random"
     },
     "token_unlocks_watch": {
-        "time_range_msk": (18.5, 19.0),
+        "time_range_msk": (18.5, 18.92),
         "sources": ["token_unlocks"],
         "selection": "fixed"
     },
     "market_breadth_evening": {
-        "time_range_msk": (19.0, 19.5),
+        "time_range_msk": (19.0, 19.83),
         "sources": ["heatmap"],
         "selection": "fixed"
     },
