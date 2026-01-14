@@ -123,7 +123,7 @@ SCREENSHOT_SOURCES = {
         "extra_wait": 5,
         "viewport_width": 1280,
         "viewport_height": 800,
-        "hide_elements": "table tbody tr:nth-child(n+7)",
+        "hide_elements": "table tbody tr:nth-child(n+7), [class*='banner'], [class*='ad'], [class*='advertisement'], iframe, [id*='ad'], aside",
         "skip_ai": True
     },
     
