@@ -7,14 +7,14 @@
     "top_gainers": "2026-01-16T19:01:00.502264+00:00",
     "fear_greed": "2026-01-17T13:31:04.882824+00:00",
     "btc_dominance": "2026-01-14T13:43:01.271642+00:00",
-    "btc_etf": "2026-01-14T17:02:05.617884+00:00",
+    "btc_etf": "2026-01-17T17:20:13.503771+00:00",
     "heatmap": "2026-01-17T04:18:27.120176+00:00"
   },
   "last_publication": {
-    "source": "token_unlocks",
-    "name": "Token Unlocks Next 7 Days",
-    "published_at": "2026-01-17T15:49:42.318183+00:00",
-    "hour_utc": 15,
+    "source": "btc_etf",
+    "name": "Bitcoin ETF Tracker",
+    "published_at": "2026-01-17T17:20:13.503788+00:00",
+    "hour_utc": 17,
     "telegram": true,
     "twitter": false
   }
