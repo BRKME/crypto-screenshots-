@@ -6,15 +6,15 @@
     "eth_etf": "2026-01-18T17:39:50.364413+00:00",
     "top_gainers": "2026-01-17T19:18:26.702106+00:00",
     "fear_greed": "2026-01-18T13:30:57.978914+00:00",
-    "btc_dominance": "2026-01-18T13:51:14.298937+00:00",
+    "btc_dominance": "2026-01-19T13:50:26.631070+00:00",
     "btc_etf": "2026-01-18T17:20:29.583897+00:00",
     "heatmap": "2026-01-19T04:00:30.389363+00:00"
   },
   "last_publication": {
-    "source": "heatmap",
-    "name": "Crypto Market Heatmap",
-    "published_at": "2026-01-19T04:00:30.389376+00:00",
-    "hour_utc": 4,
+    "source": "btc_dominance",
+    "name": "Bitcoin Dominance",
+    "published_at": "2026-01-19T13:50:26.631084+00:00",
+    "hour_utc": 13,
     "telegram": true,
     "twitter": false
   }
