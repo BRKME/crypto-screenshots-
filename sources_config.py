@@ -114,16 +114,17 @@ SCREENSHOT_SOURCES = {
     "token_unlocks": {
         "name": "Token Unlocks Next 7 Days",
         "url": "https://dropstab.com/vesting",
-        "selector": "table",
+        "selector": "body",
         "wait_for": "table tbody tr",
         "telegram_title": "🔓 Token Unlocks Next 7 Days",
         "telegram_hashtags": "#TokenUnlocks #Vesting #Crypto",
         "enabled": True,
         "priority": 8,
-        "extra_wait": 15,
-        "viewport_width": 1280,
-        "viewport_height": 800,
-        "hide_elements": "aside, nav, header, [class*='sidebar'], [class*='menu'], [class*='nav'], table tbody tr:nth-child(n+7), [class*='banner'], [class*='ad'], [class*='advertisement'], iframe, [id*='ad'], .description, h1, p",
+        "extra_wait": 20,
+        "viewport_width": 1920,
+        "viewport_height": 1080,
+        "hide_elements": "aside, nav, header, footer, [class*='sidebar'], [class*='Sidebar'], [class*='menu'], [class*='Menu'], [class*='nav'], [class*='Nav'], table tbody tr:nth-child(n+7), [class*='banner'], [class*='Banner'], [class*='ad'], [class*='Ad'], [class*='advertisement'], iframe, [id*='ad'], .description, h1, h2, p, button, [role='banner'], [role='navigation'], [class*='cookie']",
+        "crop": {"top": 150, "right": 300, "bottom": 400, "left": 300},
         "skip_ai": True
     },
     
