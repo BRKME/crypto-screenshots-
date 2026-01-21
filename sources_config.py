@@ -118,7 +118,7 @@ SCREENSHOT_SOURCES = {
         "wait_for": "table tbody tr",
         "telegram_title": "🔓 Token Unlocks Next 7 Days",
         "telegram_hashtags": "#TokenUnlocks #Vesting #Crypto",
-        "enabled": True,
+        "enabled": False,
         "priority": 8,
         "extra_wait": 20,
         "viewport_width": 1920,
@@ -197,11 +197,6 @@ POST_SCHEDULE = {
         "time_range_msk": (16.5, 17.0),
         "sources": ["fear_greed", "altcoin_season", "btc_dominance"],
         "selection": "random"
-    },
-    "token_unlocks_watch": {
-        "time_range_msk": (18.5, 18.92),
-        "sources": ["token_unlocks"],
-        "selection": "fixed"
     },
     "market_breadth_evening": {
         "time_range_msk": (19.0, 19.83),
