@@ -137,7 +137,7 @@ SCREENSHOT_SOURCES = {
         "telegram_hashtags": "#Heatmap #MarketBreadth #Crypto",
         "enabled": True,
         "priority": 8,
-        "extra_wait": 8,
+        "extra_wait": 15,
         "viewport_width": 1920,
         "viewport_height": 1080
     }
