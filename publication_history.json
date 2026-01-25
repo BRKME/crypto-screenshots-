@@ -7,14 +7,14 @@
     "top_gainers": "2026-01-24T19:21:43.428262+00:00",
     "fear_greed": "2026-01-25T13:53:40.265719+00:00",
     "btc_dominance": "2026-01-25T13:34:37.577900+00:00",
-    "btc_etf": "2026-01-24T17:20:46.143175+00:00",
+    "btc_etf": "2026-01-25T17:21:04.000088+00:00",
     "heatmap": "2026-01-24T16:29:34.828181+00:00"
   },
   "last_publication": {
-    "source": "fear_greed",
-    "name": "Crypto Fear & Greed Index",
-    "published_at": "2026-01-25T13:53:40.265740+00:00",
-    "hour_utc": 13,
+    "source": "btc_etf",
+    "name": "Bitcoin ETF Tracker",
+    "published_at": "2026-01-25T17:21:04.000109+00:00",
+    "hour_utc": 17,
     "telegram": true,
     "twitter": false
   }
