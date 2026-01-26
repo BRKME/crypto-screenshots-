@@ -8,13 +8,13 @@
     "fear_greed": "2026-01-25T13:53:40.265719+00:00",
     "btc_dominance": "2026-01-25T13:34:37.577900+00:00",
     "btc_etf": "2026-01-25T17:21:04.000088+00:00",
-    "heatmap": "2026-01-24T16:29:34.828181+00:00"
+    "heatmap": "2026-01-26T16:00:57.245211+00:00"
   },
   "last_publication": {
-    "source": "altcoin_season",
-    "name": "Altcoin Season Index",
-    "published_at": "2026-01-26T13:48:02.920696+00:00",
-    "hour_utc": 13,
+    "source": "heatmap",
+    "name": "Crypto Market Heatmap",
+    "published_at": "2026-01-26T16:00:57.245228+00:00",
+    "hour_utc": 16,
     "telegram": true,
     "twitter": false
   }
