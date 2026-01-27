@@ -24,8 +24,8 @@ SCREENSHOT_SOURCES = {
     "altcoin_season": {
         "name": "Altcoin Season Index",
         "url": "https://coinmarketcap.com/charts/altcoin-season-index/",
-        "selector": "body",
-        "wait_for": "[class*='main-content']",
+        "selector": "[data-role='main-wrapper']",
+        "wait_for": "[data-role='main-wrapper']",
         "telegram_title": "🌈 Altcoin Season Index",
         "telegram_hashtags": "#AltcoinSeason #Altcoins #CryptoMarket",
         "enabled": True,
@@ -40,7 +40,7 @@ SCREENSHOT_SOURCES = {
         "name": "Bitcoin Dominance",
         "url": "https://coinmarketcap.com/charts/bitcoin-dominance/",
         "selector": "body",
-        "wait_for": "[class*='main-content']",
+        "wait_for": "h2",
         "telegram_title": "₿ Bitcoin Dominance",
         "telegram_hashtags": "#Bitcoin #BTC #Dominance",
         "enabled": True,
@@ -126,13 +126,13 @@ SCREENSHOT_SOURCES = {
         "skip_ai": True
     },
     
-    # HEATMAP: Primary source - CoinMarketCap
-    # FALLBACK option: https://www.coingecko.com/en/cryptocurrency-heatmap
+    # HEATMAP: Primary source - CoinGecko (красивый!)
+    # FALLBACK option: https://coinmarketcap.com/crypto-heatmap/
     "heatmap": {
         "name": "Crypto Market Heatmap",
-        "url": "https://coinmarketcap.com/crypto-heatmap/",
+        "url": "https://www.coingecko.com/en/cryptocurrency-heatmap",
         "selector": "body",
-        "wait_for": "[class*='heatmap'], canvas",
+        "wait_for": "svg, canvas, [class*='heatmap']",
         "telegram_title": "🗺️ Crypto Market Heatmap",
         "telegram_hashtags": "#Heatmap #MarketBreadth #Crypto",
         "enabled": True,
@@ -141,7 +141,7 @@ SCREENSHOT_SOURCES = {
         "viewport_width": 1920,
         "viewport_height": 1080,
         "hide_elements": "header, nav, footer, aside, [class*='navbar'], [class*='sidebar'], [class*='banner'], [class*='ad'], [class*='cookie']",
-        "crop": {"top": 100, "right": 0, "bottom": 100, "left": 0}
+        "crop": {"top": 100, "right": 0, "bottom": 400, "left": 0}
     }
 }
 
@@ -191,7 +191,7 @@ SCREENSHOT_SOURCES = {
 
 POST_SCHEDULE = {
     "market_breadth_morning": {
-        "time_range_msk": (7.0, 7.83),
+        "time_range_msk": (7.0, 8.0),
         "sources": ["heatmap"],
         "selection": "fixed"
     },
@@ -201,7 +201,7 @@ POST_SCHEDULE = {
         "selection": "random"
     },
     "market_breadth_evening": {
-        "time_range_msk": (19.0, 19.83),
+        "time_range_msk": (19.0, 20.0),
         "sources": ["heatmap"],
         "selection": "fixed"
     },
