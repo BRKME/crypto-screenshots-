@@ -126,13 +126,13 @@ SCREENSHOT_SOURCES = {
         "skip_ai": True
     },
     
-    # HEATMAP: Primary source - CoinGecko (красивый!)
-    # FALLBACK option: https://coinmarketcap.com/crypto-heatmap/
+    # HEATMAP: Primary source - CoinMarketCap (SVG селектор)
+    # FALLBACK: CoinGecko тоже с CloudFlare защитой
     "heatmap": {
         "name": "Crypto Market Heatmap",
-        "url": "https://www.coingecko.com/en/cryptocurrency-heatmap",
-        "selector": "div[data-controller='heatmap']",
-        "wait_for": "svg.highcharts-root",
+        "url": "https://coinmarketcap.com/crypto-heatmap/",
+        "selector": "svg#d3svg",
+        "wait_for": "svg#d3svg",
         "telegram_title": "🗺️ Crypto Market Heatmap",
         "telegram_hashtags": "#Heatmap #MarketBreadth #Crypto",
         "enabled": True,
@@ -141,7 +141,7 @@ SCREENSHOT_SOURCES = {
         "viewport_width": 1920,
         "viewport_height": 1080,
         "hide_elements": "header, nav, footer, aside, [class*='navbar'], [class*='sidebar'], [class*='banner'], [class*='ad'], [class*='cookie']",
-        "crop": {"top": 50, "right": 0, "bottom": 50, "left": 0}
+        "crop": {"top": 80, "right": 0, "bottom": 80, "left": 0}
     }
 }
 
