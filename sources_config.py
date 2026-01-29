@@ -126,22 +126,72 @@ SCREENSHOT_SOURCES = {
         "skip_ai": True
     },
     
-    # HEATMAP: Primary source - CoinMarketCap (SVG селектор)
-    # FALLBACK: CoinGecko тоже с CloudFlare защитой
-    "heatmap": {
-        "name": "Crypto Market Heatmap",
+    # HEATMAP VARIANT 1: CMC Fullpage + Crop
+    "heatmap_v1_fullpage": {
+        "name": "Crypto Market Heatmap v1 (Fullpage)",
         "url": "https://coinmarketcap.com/crypto-heatmap/",
-        "selector": "svg#d3svg",
-        "wait_for": "svg#d3svg g.gwrap text",
-        "telegram_title": "🗺️ Crypto Market Heatmap",
+        "selector": "body",
+        "wait_for": "svg#d3svg",
+        "telegram_title": "🗺️ Crypto Market Heatmap v1",
         "telegram_hashtags": "#Heatmap #MarketBreadth #Crypto",
         "enabled": True,
         "priority": 8,
-        "extra_wait": 20,
+        "extra_wait": 15,
+        "viewport_width": 1920,
+        "viewport_height": 1080,
+        "hide_elements": "header, nav, footer, aside, [class*='navbar'], [class*='sidebar'], [class*='banner'], [class*='ad'], [class*='cookie']",
+        "crop": {"top": 200, "right": 200, "bottom": 300, "left": 200}
+    },
+    
+    # HEATMAP VARIANT 2: CMC Small Viewport
+    "heatmap_v2_small": {
+        "name": "Crypto Market Heatmap v2 (Small Viewport)",
+        "url": "https://coinmarketcap.com/crypto-heatmap/",
+        "selector": "body",
+        "wait_for": "svg#d3svg",
+        "telegram_title": "🗺️ Crypto Market Heatmap v2",
+        "telegram_hashtags": "#Heatmap #MarketBreadth #Crypto",
+        "enabled": True,
+        "priority": 8,
+        "extra_wait": 15,
+        "viewport_width": 1400,
+        "viewport_height": 900,
+        "hide_elements": "header, nav, footer, aside, [class*='navbar'], [class*='sidebar'], [class*='banner'], [class*='ad'], [class*='cookie']",
+        "crop": {"top": 150, "right": 100, "bottom": 200, "left": 100}
+    },
+    
+    # HEATMAP VARIANT 3: CMC Long Wait
+    "heatmap_v3_longwait": {
+        "name": "Crypto Market Heatmap v3 (Long Wait)",
+        "url": "https://coinmarketcap.com/crypto-heatmap/",
+        "selector": "svg#d3svg",
+        "wait_for": "svg#d3svg",
+        "telegram_title": "🗺️ Crypto Market Heatmap v3",
+        "telegram_hashtags": "#Heatmap #MarketBreadth #Crypto",
+        "enabled": True,
+        "priority": 8,
+        "extra_wait": 30,
         "viewport_width": 1920,
         "viewport_height": 1080,
         "hide_elements": "header, nav, footer, aside, [class*='navbar'], [class*='sidebar'], [class*='banner'], [class*='ad'], [class*='cookie']",
         "crop": {"top": 80, "right": 0, "bottom": 80, "left": 0}
+    },
+    
+    # HEATMAP VARIANT 4: TradingView
+    "heatmap_v4_tradingview": {
+        "name": "Crypto Market Heatmap v4 (TradingView)",
+        "url": "https://www.tradingview.com/heatmap/crypto/",
+        "selector": "body",
+        "wait_for": "[class*='heatmap'], canvas, svg",
+        "telegram_title": "🗺️ Crypto Market Heatmap v4",
+        "telegram_hashtags": "#Heatmap #MarketBreadth #Crypto",
+        "enabled": True,
+        "priority": 8,
+        "extra_wait": 10,
+        "viewport_width": 1920,
+        "viewport_height": 1080,
+        "hide_elements": "header, nav, footer, aside, [class*='navbar'], [class*='sidebar'], [class*='banner'], [class*='ad'], [class*='cookie']",
+        "crop": {"top": 100, "right": 0, "bottom": 100, "left": 0}
     }
 }
 
@@ -190,20 +240,33 @@ SCREENSHOT_SOURCES = {
 # ===============================================================================
 
 POST_SCHEDULE = {
-    "market_breadth_morning": {
+    # HEATMAP TESTING - 4 VARIANTS
+    "heatmap_test_v1": {
         "time_range_msk": (7.0, 8.0),
-        "sources": ["heatmap"],
+        "sources": ["heatmap_v1_fullpage"],
         "selection": "fixed"
     },
+    "heatmap_test_v2": {
+        "time_range_msk": (10.0, 11.0),
+        "sources": ["heatmap_v2_small"],
+        "selection": "fixed"
+    },
+    "heatmap_test_v3": {
+        "time_range_msk": (13.0, 14.0),
+        "sources": ["heatmap_v3_longwait"],
+        "selection": "fixed"
+    },
+    "heatmap_test_v4": {
+        "time_range_msk": (19.0, 20.0),
+        "sources": ["heatmap_v4_tradingview"],
+        "selection": "fixed"
+    },
+    
+    # REGULAR SCHEDULE
     "daily_market_sentiment": {
         "time_range_msk": (16.5, 17.0),
         "sources": ["fear_greed", "altcoin_season", "btc_dominance"],
         "selection": "random"
-    },
-    "market_breadth_evening": {
-        "time_range_msk": (19.0, 20.0),
-        "sources": ["heatmap"],
-        "selection": "fixed"
     },
     "btc_etf_flows": {
         "time_range_msk": (20.0, 20.5),
