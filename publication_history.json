@@ -9,13 +9,14 @@
     "btc_dominance": "2026-01-28T13:53:20.205413+00:00",
     "btc_etf": "2026-01-27T17:02:55.575208+00:00",
     "heatmap": "2026-01-29T16:51:00.580087+00:00",
-    "heatmap_v1_fullpage": "2026-01-30T04:23:29.668710+00:00"
+    "heatmap_v1_fullpage": "2026-01-30T04:23:29.668710+00:00",
+    "heatmap_v2_small": "2026-01-30T07:29:12.967240+00:00"
   },
   "last_publication": {
-    "source": "heatmap_v1_fullpage",
-    "name": "Crypto Market Heatmap v1 (Fullpage)",
-    "published_at": "2026-01-30T04:23:29.668728+00:00",
-    "hour_utc": 4,
+    "source": "heatmap_v2_small",
+    "name": "Crypto Market Heatmap v2 (Small Viewport)",
+    "published_at": "2026-01-30T07:29:12.967256+00:00",
+    "hour_utc": 7,
     "telegram": true,
     "twitter": false
   }
