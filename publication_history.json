@@ -10,15 +10,15 @@
     "btc_etf": "2026-01-27T17:02:55.575208+00:00",
     "heatmap": "2026-01-29T16:51:00.580087+00:00",
     "heatmap_v1_fullpage": "2026-01-30T04:23:29.668710+00:00",
-    "heatmap_v2_small": "2026-01-30T07:29:12.967240+00:00",
+    "heatmap_v2_small": "2026-01-31T07:32:07.437269+00:00",
     "heatmap_v3_longwait": "2026-01-30T10:39:07.011535+00:00",
     "heatmap_v4_tradingview": "2026-01-30T16:43:52.158781+00:00"
   },
   "last_publication": {
-    "source": "top_gainers",
-    "name": "Top Gainers",
-    "published_at": "2026-01-30T19:04:57.233173+00:00",
-    "hour_utc": 19,
+    "source": "heatmap_v2_small",
+    "name": "Crypto Market Heatmap v2 (Small Viewport)",
+    "published_at": "2026-01-31T07:32:07.437284+00:00",
+    "hour_utc": 7,
     "telegram": true,
     "twitter": false
   }
