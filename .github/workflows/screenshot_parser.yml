@@ -1,14 +1,12 @@
-name: CMC Screenshots - TEST MODE (Every 30 min)
-
+name: CMC Screenshots - Production
 on:
   schedule:
-    # 🧪 TEST MODE: каждые 30 минут
-    - cron: '0 * * * *'
+    # Каждые 30 минут - покрывает все временные слоты
+    - cron: '0,30 * * * *'
   
   # Возможность запустить вручную
   workflow_dispatch:
 
-# ✅ FIX: Даём права на push
 permissions:
   contents: write
 
@@ -47,7 +45,3 @@ jobs:
           git add publication_history.json
           git diff --quiet && git diff --staged --quiet || git commit -m "📊 Update publication history [skip ci]"
           git push
-
-# ⚠️ ВАЖНО: После теста верни обычный cron!
-# Обычный режим (каждые 3 часа):
-# - cron: '5 0,3,6,9,12,15,18,21 * * *'
