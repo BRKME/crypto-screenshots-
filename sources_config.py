@@ -126,13 +126,55 @@ SCREENSHOT_SOURCES = {
         "skip_ai": True
     },
     
-    # HEATMAP VARIANT 1: CMC Fullpage + Crop
-    "heatmap_v1_fullpage": {
-        "name": "Crypto Market Heatmap v1 (Fullpage)",
-        "url": "https://coinmarketcap.com/crypto-heatmap/",
+    # ========================================================================
+    # HEATMAP SOURCES - НОВЫЕ (COIN360, BLOCKCHAIN.COM, NDAX)
+    # ========================================================================
+    
+    # HEATMAP V1: Coin360 (Canvas-based с текстом)
+    "heatmap_v1_coin360": {
+        "name": "Crypto Market Heatmap - Coin360",
+        "url": "https://coin360.com/",
+        "selector": "div#MAP_ID",
+        "wait_for": "canvas",
+        "telegram_title": "🗺️ Crypto Market Heatmap",
+        "telegram_hashtags": "#Heatmap #MarketBreadth #Crypto",
+        "enabled": True,
+        "priority": 8,
+        "extra_wait": 10,
+        "viewport_width": 1920,
+        "viewport_height": 1080,
+        "close_modal": True,  # Закрыть модальное окно если появится
+        "hide_elements": "header, nav, footer, aside, [class*='navbar'], [class*='sidebar'], [class*='banner'], [class*='ad'], [class*='cookie'], button, [class*='button']",
+        "crop": {"top": 100, "right": 50, "bottom": 100, "left": 50},
+        "skip_width_padding": True
+    },
+    
+    # HEATMAP V2: Blockchain.com (Canvas-based)
+    "heatmap_v2_blockchain": {
+        "name": "Crypto Market Heatmap - Blockchain.com",
+        "url": "https://www.blockchain.com/explorer/prices/heatmap",
+        "selector": "canvas#heatmapCanvas",
+        "wait_for": "canvas#heatmapCanvas",
+        "telegram_title": "🗺️ Crypto Market Heatmap",
+        "telegram_hashtags": "#Heatmap #MarketBreadth #Crypto",
+        "enabled": True,
+        "priority": 8,
+        "extra_wait": 10,
+        "viewport_width": 1920,
+        "viewport_height": 1080,
+        "element_padding": {"top": 50, "right": 50, "bottom": 50, "left": 50},
+        "hide_elements": "header, nav, footer, aside, [class*='navbar'], [class*='Navigation'], [class*='sidebar'], [class*='banner'], [class*='ad'], [class*='cookie']",
+        "crop": {"top": 0, "right": 0, "bottom": 0, "left": 0},
+        "skip_width_padding": True
+    },
+    
+    # HEATMAP V3: NDAX (Fallback - стандартные селекторы)
+    "heatmap_v3_ndax": {
+        "name": "Crypto Market Heatmap - NDAX",
+        "url": "https://ndax.io/en/markets/heatmap",
         "selector": "body",
-        "wait_for": "svg#d3svg",
-        "telegram_title": "🗺️ Crypto Market Heatmap v1",
+        "wait_for": "canvas",
+        "telegram_title": "🗺️ Crypto Market Heatmap",
         "telegram_hashtags": "#Heatmap #MarketBreadth #Crypto",
         "enabled": True,
         "priority": 8,
@@ -140,58 +182,8 @@ SCREENSHOT_SOURCES = {
         "viewport_width": 1920,
         "viewport_height": 1080,
         "hide_elements": "header, nav, footer, aside, [class*='navbar'], [class*='sidebar'], [class*='banner'], [class*='ad'], [class*='cookie']",
-        "crop": {"top": 200, "right": 200, "bottom": 300, "left": 200}
-    },
-    
-    # HEATMAP VARIANT 2: CMC Small Viewport
-    "heatmap_v2_small": {
-        "name": "Crypto Market Heatmap v2 (Small Viewport)",
-        "url": "https://coinmarketcap.com/crypto-heatmap/",
-        "selector": "body",
-        "wait_for": "svg#d3svg",
-        "telegram_title": "🗺️ Crypto Market Heatmap v2",
-        "telegram_hashtags": "#Heatmap #MarketBreadth #Crypto",
-        "enabled": True,
-        "priority": 8,
-        "extra_wait": 20,
-        "viewport_width": 1400,
-        "viewport_height": 900,
-        "hide_elements": "header, nav, footer, aside, [class*='navbar'], [class*='sidebar'], [class*='banner'], [class*='ad'], [class*='cookie']",
-        "crop": {"top": 150, "right": 100, "bottom": 200, "left": 100}
-    },
-    
-    # HEATMAP VARIANT 3: CMC Long Wait
-    "heatmap_v3_longwait": {
-        "name": "Crypto Market Heatmap v3 (Long Wait)",
-        "url": "https://coinmarketcap.com/crypto-heatmap/",
-        "selector": "svg#d3svg",
-        "wait_for": "svg#d3svg",
-        "telegram_title": "🗺️ Crypto Market Heatmap v3",
-        "telegram_hashtags": "#Heatmap #MarketBreadth #Crypto",
-        "enabled": True,
-        "priority": 8,
-        "extra_wait": 35,
-        "viewport_width": 1920,
-        "viewport_height": 1080,
-        "hide_elements": "header, nav, footer, aside, [class*='navbar'], [class*='sidebar'], [class*='banner'], [class*='ad'], [class*='cookie']",
-        "crop": {"top": 80, "right": 0, "bottom": 80, "left": 0}
-    },
-    
-    # HEATMAP VARIANT 4: TradingView
-    "heatmap_v4_tradingview": {
-        "name": "Crypto Market Heatmap v4 (TradingView)",
-        "url": "https://www.tradingview.com/heatmap/crypto/",
-        "selector": "body",
-        "wait_for": "body",
-        "telegram_title": "🗺️ Crypto Market Heatmap v4",
-        "telegram_hashtags": "#Heatmap #MarketBreadth #Crypto",
-        "enabled": True,
-        "priority": 8,
-        "extra_wait": 15,
-        "viewport_width": 1920,
-        "viewport_height": 1080,
-        "hide_elements": "header, nav, footer, aside, [class*='navbar'], [class*='sidebar'], [class*='banner'], [class*='ad'], [class*='cookie']",
-        "crop": {"top": 100, "right": 0, "bottom": 100, "left": 0}
+        "crop": {"top": 150, "right": 100, "bottom": 150, "left": 100},
+        "skip_width_padding": True
     }
 }
 
@@ -200,27 +192,22 @@ SCREENSHOT_SOURCES = {
 # ===============================================================================
 
 POST_SCHEDULE = {
-    # HEATMAP TESTING - 4 VARIANTS
+    # HEATMAP TESTING - 3 НОВЫХ ИСТОЧНИКА
     # ⚠️ FIX: GitHub Actions cron неточный (может запускаться ±10 минут)
     # Добавлен буфер 10 минут перед каждым слотом
     "heatmap_test_v1": {
-        "time_range_msk": (6.85, 8.0),  # 06:51-08:00 (было 07:00-08:00)
-        "sources": ["heatmap_v1_fullpage"],
+        "time_range_msk": (6.85, 8.0),  # 06:51-08:00 (Coin360)
+        "sources": ["heatmap_v1_coin360"],
         "selection": "fixed"
     },
     "heatmap_test_v2": {
-        "time_range_msk": (9.85, 11.0),  # 09:51-11:00 (было 10:00-11:00)
-        "sources": ["heatmap_v2_small"],
+        "time_range_msk": (9.85, 11.0),  # 09:51-11:00 (Blockchain.com)
+        "sources": ["heatmap_v2_blockchain"],
         "selection": "fixed"
     },
     "heatmap_test_v3": {
-        "time_range_msk": (12.85, 14.0),  # 12:51-14:00 (было 13:00-14:00)
-        "sources": ["heatmap_v3_longwait"],
-        "selection": "fixed"
-    },
-    "heatmap_test_v4": {
-        "time_range_msk": (18.85, 20.0),  # 18:51-20:00 (было 19:00-20:00)
-        "sources": ["heatmap_v4_tradingview"],
+        "time_range_msk": (12.85, 14.0),  # 12:51-14:00 (NDAX)
+        "sources": ["heatmap_v3_ndax"],
         "selection": "fixed"
     },
     
