@@ -13,13 +13,14 @@
     "heatmap_v2_small": "2026-02-05T07:32:27.981962+00:00",
     "heatmap_v3_longwait": "2026-02-05T10:36:43.296832+00:00",
     "heatmap_v4_tradingview": "2026-02-05T16:05:23.282650+00:00",
-    "heatmap_v1_coin360": "2026-02-06T03:59:08.032931+00:00"
+    "heatmap_v1_coin360": "2026-02-06T03:59:08.032931+00:00",
+    "heatmap_v2_blockchain": "2026-02-06T07:28:36.191426+00:00"
   },
   "last_publication": {
-    "source": "heatmap_v1_coin360",
-    "name": "Crypto Market Heatmap - Coin360",
-    "published_at": "2026-02-06T03:59:08.032943+00:00",
-    "hour_utc": 3,
+    "source": "heatmap_v2_blockchain",
+    "name": "Crypto Market Heatmap - Blockchain.com",
+    "published_at": "2026-02-06T07:28:36.191438+00:00",
+    "hour_utc": 7,
     "telegram": true,
     "twitter": false
   }
