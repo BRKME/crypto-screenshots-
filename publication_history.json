@@ -3,7 +3,7 @@
     "token_unlocks": "2026-01-21T15:52:26.417609+00:00",
     "altcoin_season": "2026-01-26T13:48:02.920680+00:00",
     "derivatives": "2025-12-10T12:58:24.353929+00:00",
-    "eth_etf": "2026-01-30T17:37:09.350850+00:00",
+    "eth_etf": "2026-02-06T17:38:19.741541+00:00",
     "top_gainers": "2026-02-05T19:12:36.992651+00:00",
     "fear_greed": "2026-02-06T13:59:57.391920+00:00",
     "btc_dominance": "2026-01-28T13:53:20.205413+00:00",
@@ -18,10 +18,10 @@
     "heatmap_v3_ndax": "2026-02-06T10:06:37.318312+00:00"
   },
   "last_publication": {
-    "source": "fear_greed",
-    "name": "Crypto Fear & Greed Index",
-    "published_at": "2026-02-06T13:59:57.391933+00:00",
-    "hour_utc": 13,
+    "source": "eth_etf",
+    "name": "Ethereum ETF Tracker",
+    "published_at": "2026-02-06T17:38:19.741555+00:00",
+    "hour_utc": 17,
     "telegram": true,
     "twitter": false
   }
