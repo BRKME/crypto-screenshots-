@@ -14,13 +14,14 @@
     "heatmap_v3_longwait": "2026-02-05T10:36:43.296832+00:00",
     "heatmap_v4_tradingview": "2026-02-05T16:05:23.282650+00:00",
     "heatmap_v1_coin360": "2026-02-06T03:59:08.032931+00:00",
-    "heatmap_v2_blockchain": "2026-02-06T07:28:36.191426+00:00"
+    "heatmap_v2_blockchain": "2026-02-06T07:28:36.191426+00:00",
+    "heatmap_v3_ndax": "2026-02-06T10:06:37.318312+00:00"
   },
   "last_publication": {
-    "source": "heatmap_v2_blockchain",
-    "name": "Crypto Market Heatmap - Blockchain.com",
-    "published_at": "2026-02-06T07:28:36.191438+00:00",
-    "hour_utc": 7,
+    "source": "heatmap_v3_ndax",
+    "name": "Crypto Market Heatmap - NDAX",
+    "published_at": "2026-02-06T10:06:37.318327+00:00",
+    "hour_utc": 10,
     "telegram": true,
     "twitter": false
   }
